@@ -27,9 +27,8 @@ pixel Canvas::GetPixel( std::size_t x, std::size_t y ) const {
 
 void Canvas::SetPixel( std::size_t x, std::size_t y, pixel p ) {
 
-    if( x >= 0 && x < width && y >= 0 && y < height )
-    {
-        pixels[y * width + x] = p;
+    if( x >= 0 && x < width && y >= 0 && y < height ) {
+		pixels[y * width + x] = p;
     }
 }
 
@@ -46,10 +45,10 @@ void Line( Canvas& c, int x1, int y1, int x2, int y2, color color )
 
     if( y1 == y2 ) {          // Horizontal
         if( x1 > x2 ) {  // order for loop to work
-	    xTmp = x1;
-	    x1 = x2;
-	    x2 = xTmp;
-	}
+	    	xTmp = x1;
+	    	x1 = x2;
+	    	x2 = xTmp;
+		}
 	    
         for( auto i = x1 ; i <= x2 ; ++i ) {
             c.SetColor( i, y1, color );
@@ -57,10 +56,10 @@ void Line( Canvas& c, int x1, int y1, int x2, int y2, color color )
         return;
     } else if ( x1 == x2 ) {   // Vertical
         if( y1 > y2 ) {  // order for loop to work
-	    yTmp = y1;
-	    y1 = y2;
-	    y2 = yTmp;
-	}
+	    	yTmp = y1;
+	    	y1 = y2;
+	    	y2 = yTmp;
+		}
 	    
         for( auto j = y1 ; j <= y2 ; ++j ) {
             c.SetColor( x1, j, color );
@@ -103,3 +102,28 @@ void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName )
         }
     }	
 }
+
+void InitGraphics()
+{
+
+}
+
+void SetViewport(double x1, double y1, double x2, double y2)
+{
+
+}
+
+void SetWindow(double x1, double y1, double x2, double y2)
+{
+
+}
+
+void MoveTo2D(double x, double y)
+{
+
+}
+
+void DrawTo2D(Canvas &c, color color, double x, double y)
+{
+
+})

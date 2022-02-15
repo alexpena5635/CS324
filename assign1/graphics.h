@@ -12,41 +12,49 @@ struct color {
 };
 
 namespace colors {
-  constexpr color BLACK{   0,   0,   0 };
-  constexpr color WHITE{ 255, 255, 255 };
-  constexpr color RED{   255,   0,   0 };
-  constexpr color GREEN{   0, 255,   0 };
-  constexpr color BLUE{    0,   0, 255 };
+	constexpr color BLACK{   0,   0,   0 };
+	constexpr color WHITE{ 255, 255, 255 };
+	constexpr color RED{   255,   0,   0 };
+	constexpr color GREEN{   0, 255,   0 };
+	constexpr color BLUE{    0,   0, 255 };
 }
 
 struct pixel {
     color c;
 };
 
-class Canvas 
-{
-public:
-    Canvas( std::size_t w, std::size_t h, color background = colors::WHITE );
+// This just represents the device or the pix/bit map
+class Canvas {
+	public:
+    	Canvas( std::size_t w, std::size_t h, color background = colors::WHITE );
 
-    void SetColor( std::size_t x, std::size_t y, color c );
+    	void SetColor( std::size_t x, std::size_t y, color c );
     
-    pixel GetPixel( std::size_t x, std::size_t y ) const;
-    void SetPixel(  std::size_t x, std::size_t y, pixel c );
+    	pixel GetPixel( std::size_t x, std::size_t y ) const;
+   		void SetPixel(  std::size_t x, std::size_t y, pixel c );
     
-    void Clear();
+    	void Clear();
 
-    std::size_t Width()  const { return width; }
-    std::size_t Height() const { return height; }
+    	std::size_t Width()  const { return width; }
+    	std::size_t Height() const { return height; }
 
-private:
-    std::size_t width, height;
-    std::vector<pixel> pixels;
-    color background;
+	private:
+    	std::size_t width, height;
+    	std::vector<pixel> pixels;
+    	color background;
 };
-
 
 void Line( Canvas& c, int x1, int y1, int x2, int y2, color color );
 
 void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName );
+
+// New functions
+void InitGraphics(); // call setviewport, setwindow, and set the size of the canvas
+void SetViewport(double x1, double y1, double x2, double y2); // set the viewport "corner" coords (global)
+void SetWindow(double x1, double y1, double x2, double y2);  // set the window "corner" coords (global)
+void WindowToViewport(); // Map a random point from the window to the viewport, based on how they were set
+
+void MoveTo2D(double x, double y); // On the canvas space, where the "pen" is movedto
+void DrawTo2D(Canvas &c, color color, double x, double y); // Go from the current spot to (x,y) an draw line
 
 #endif
