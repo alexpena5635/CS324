@@ -8,6 +8,9 @@
 
 #include "graphics.h"
 
+// The corner points of the window and viewport
+point minViewport, maxViewport;
+point minWindow, maxWindow;
 
 Canvas::Canvas( std::size_t w, std::size_t h, color bg )
     : width(w), height(h), 
@@ -105,17 +108,27 @@ void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName )
 
 void InitGraphics()
 {
+	SetWindow(-1.0, -1.0, 4.0, 4.0);
+	SetViewport(-1.0, -1.0, 1.0, 1.0);
 
 }
 
 void SetViewport(double x1, double y1, double x2, double y2)
 {
+	minViewport.x = x1;
+	minViewport.y = y1;
 
+	maxViewport.x = x2;
+	maxViewport.y = y2;	
 }
 
 void SetWindow(double x1, double y1, double x2, double y2)
 {
-
+	minWindow.x = x1;
+	minWindow.y = y1;
+	
+	maxWindow.x = x2;
+	maxWindow.y = y2;
 }
 
 void MoveTo2D(double x, double y)
@@ -126,4 +139,4 @@ void MoveTo2D(double x, double y)
 void DrawTo2D(Canvas &c, color color, double x, double y)
 {
 
-})
+}

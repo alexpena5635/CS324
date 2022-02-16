@@ -23,6 +23,11 @@ struct pixel {
     color c;
 };
 
+struct point {
+	double x;
+	double y;
+};
+
 // This just represents the device or the pix/bit map
 class Canvas {
 	public:
@@ -43,6 +48,8 @@ class Canvas {
     	std::vector<pixel> pixels;
     	color background;
 };
+
+
 
 void Line( Canvas& c, int x1, int y1, int x2, int y2, color color );
 
