@@ -5,12 +5,9 @@
 #include <string>
 #include <iostream>
 #include <vector>
+#include <memory>
 
 #include "graphics.h"
-
-// The corner points of the window and viewport
-point minViewport, maxViewport;
-point minWindow, maxWindow;
 
 Canvas::Canvas( std::size_t w, std::size_t h, color bg )
     : width(w), height(h), 
@@ -68,7 +65,7 @@ void Line( Canvas& c, int x1, int y1, int x2, int y2, color color )
             c.SetColor( x1, j, color );
         }
         return;
-    }
+   }
 
     double a = 1.0 * (y1 - y2) / (x1 - x2);
     double b = y1 - a * x1;
@@ -106,29 +103,37 @@ void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName )
     }	
 }
 
-void InitGraphics()
-{
-	SetWindow(-1.0, -1.0, 4.0, 4.0);
-	SetViewport(-1.0, -1.0, 1.0, 1.0);
+////////////// New funcs
 
+// The corner points of the window and viewport
+point minViewport, maxViewport;
+point minWindow, maxWindow;
+
+std::shared_ptr<Canvas> InitGraphics(const int size, const point wMin, const point wMax, const point vMin, const point vMax)
+{
+	SetWindow(wMin.x, wMin.y, wMax.x, wMax.y);
+	SetViewport(vMin.x, vMin.y, vMax.x, vMax.y);
+	//pixmap size? maybe this intializes the canvas as well?	
+	std::shared_ptr<Canvas> pixmap (new Canvas(size, size, colors::WHITE));
+	
+	return pixmap;	
 }
 
 void SetViewport(double x1, double y1, double x2, double y2)
 {
-	minViewport.x = x1;
-	minViewport.y = y1;
-
-	maxViewport.x = x2;
-	maxViewport.y = y2;	
+	minViewport.set(x1, y1);
+	maxViewport.set(x2, y2);
 }
 
 void SetWindow(double x1, double y1, double x2, double y2)
 {
-	minWindow.x = x1;
-	minWindow.y = y1;
-	
-	maxWindow.x = x2;
-	maxWindow.y = y2;
+	minWindow.set(x1, y1);
+	maxWindow.set(x2, y2);
+}
+
+void WindowToViewport()
+{
+		
 }
 
 void MoveTo2D(double x, double y)
