@@ -60,6 +60,7 @@ void SetViewport(double x1, double y1, double x2, double y2); // set the viewpor
 void SetWindow(double x1, double y1, double x2, double y2);  // set the window "corner" coords (global)
 
 void WindowToViewport(double pointW[DIM], double pointV[DIM]); // possibly take in a x, y(and later z?)
+void ViewportToPixmap(double canvasSize, double pointV[DIM], double pointP[DIM]);
 void translatePoint(double pointW[DIM], double pointV[DIM], double xTran, double yTran);
 void scalePoint(double pointW[DIM], double pointV[DIM], double xScale, double yScale);
 

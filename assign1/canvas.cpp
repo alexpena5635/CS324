@@ -114,6 +114,9 @@ double minWindow[DIM], maxWindow[DIM];
 double sx;
 double sy;
 
+// Current position from "move" is set here"
+double currentPos[DIM] = {};
+
 std::shared_ptr<Canvas> InitGraphics(const int size, const double wMin[], const double wMax[], const double vMin[], const double vMax[])
 {
 	SetWindow(wMin[0], wMin[1], wMax[0], wMax[1]);
@@ -172,15 +175,24 @@ void WindowToViewport(double pointW[DIM], double pointV[DIM]) // possibly take i
 	
 	//translatePoint(pointW, pointV, -minWindow[0], -minWindow[1]);	
 	translatePoint(pointW, pointV, minViewport[0], minViewport[1]);	
-	std::cout << "pointV after 1st transl:  x =" << pointV[0] << " y=" << pointV[1] << std::endl; 
+	//std::cout << "pointV after 1st transl:  x =" << pointV[0] << " y=" << pointV[1] << std::endl; 
 	
 	scalePoint(pointV, pointV, sx, sy);
 	
-	std::cout << "pointV after scale:  x =" << pointV[0] << " y=" << pointV[1] << std::endl; 
+	//std::cout << "pointV after scale:  x =" << pointV[0] << " y=" << pointV[1] << std::endl; 
 	//translatePoint(pointV, pointV, minViewport[0], minViewport[1]);
 	translatePoint(pointV, pointV, -minWindow[0], -minWindow[1]);
-	std::cout << "pointV after 2nd transl: x=" << pointV[0] << " y=" << pointV[1] << std::endl;
+	//std::cout << "pointV after 2nd transl: x=" << pointV[0] << " y=" << pointV[1] << std::endl;
 	
+}
+
+void ViewportToPixmap(double canvasSize, double pointV[DIM], double pointP[DIM])
+{
+	double scaleX = canvasSize / (maxViewport[0]-minViewport[0]);
+    double scaleY = canvasSize / (maxViewport[1]-minViewport[1]);
+	translatePoint(pointV, pointP, 0, 0); //smallest spot on cavas is always 0,0	
+	scalePoint(pointP, pointP, scaleX, scaleY);
+	translatePoint(pointP, pointP, -minViewport[0], -minViewport[1]);
 }
 
 void translatePoint(double pointW[DIM], double pointV[DIM], double xTran, double yTran)
@@ -242,10 +254,34 @@ void scalePoint(double pointW[DIM], double pointV[DIM], double xScale, double yS
 
 void MoveTo2D(double x, double y)
 {
-
+	// Setting some global that retains the world position we have "moved to"
+	currentPos[0] = x;
+	currentPos[1] = y;
 }
 
 void DrawTo2D(Canvas &c, color color, double x, double y)
 {
+	// Calling the line function on the canvas from the global we "moved to"
+	// ... to the destionation
+	
+	// But before do this, need to..
+	// - Translate world coord to viewport (WindowToViewport)
+	// - Translate viewport coords to canvas/pixmap coordinates	
+	double windowStart[DIM] = {currentPos[0], currentPos[1], 1};
+	double windowEnd[DIM] = {x, y, 1};
+	double startPoint[DIM] = {}, endPoint[DIM] = {};
+		
+	// Translate the start and end coodinates from world space to viewport
+	WindowToViewport(windowStart, startPoint); // possibly take in a x, y (and later z?)
+	WindowToViewport(windowEnd, endPoint); // possibly take in a x, y (and later z?)
 
+	// Viewport to canvas space/coords?	
+	// This works!!!! but its like a full screen with only the viewport shown
+	// need somehting different for sgementing the viewport on the screen
+	// this is like a full scale!
+	ViewportToPixmap(c.Width(), startPoint, startPoint);
+	ViewportToPixmap(c.Width(), endPoint, endPoint);
+	
+	Line(c, startPoint[0], startPoint[1], endPoint[0], endPoint[1], color);
+	
 }
