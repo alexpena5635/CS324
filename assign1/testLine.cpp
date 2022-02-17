@@ -39,8 +39,8 @@ int main()
     std::string fileName( "testLine.pbm" );
     SaveCanvasToFile( gc, fileName );
 
-	point windowMin = {-1.0, -1.0} , windowMax = {4.0, 4.0};
-	point viewMin = {-1.0, -1.0} , viewMax = {1.0, 1.0};
+	double windowMin[] = {-1.0, -1.0} , windowMax[] = {4.0, 4.0};
+	double viewMin[] = {-1.0, -1.0} , viewMax[] = {1.0, 1.0};
 	int pixmapSize = 1000;
 	
 	std::shared_ptr<Canvas> pixmap = InitGraphics(pixmapSize, windowMin, windowMax, viewMin, viewMax);

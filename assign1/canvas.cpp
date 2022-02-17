@@ -105,14 +105,19 @@ void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName )
 
 ////////////// New funcs
 
+//const int DIM;
 // The corner points of the window and viewport
-point minViewport, maxViewport;
-point minWindow, maxWindow;
+double minViewport[DIM], maxViewport[DIM];
+double minWindow[DIM], maxWindow[DIM];
 
-std::shared_ptr<Canvas> InitGraphics(const int size, const point wMin, const point wMax, const point vMin, const point vMax)
+// Scaling factor for x and y
+double sx = (maxViewport[0]-minViewport[0]) / (maxWindow[0]-minWindow[0]);
+double sy = (maxViewport[1]-minViewport[1]) / (maxWindow[1]-minWindow[1]);
+
+std::shared_ptr<Canvas> InitGraphics(const int size, const double wMin[], const double wMax[], const double vMin[], const double vMax[])
 {
-	SetWindow(wMin.x, wMin.y, wMax.x, wMax.y);
-	SetViewport(vMin.x, vMin.y, vMax.x, vMax.y);
+	SetWindow(wMin[0], wMin[1], wMax[0], wMax[1]);
+	SetViewport(vMin[0], vMin[1], vMax[0], vMax[1]);
 	//pixmap size? maybe this intializes the canvas as well?	
 	std::shared_ptr<Canvas> pixmap (new Canvas(size, size, colors::WHITE));
 	
@@ -121,19 +126,83 @@ std::shared_ptr<Canvas> InitGraphics(const int size, const point wMin, const poi
 
 void SetViewport(double x1, double y1, double x2, double y2)
 {
-	minViewport.set(x1, y1);
-	maxViewport.set(x2, y2);
+	minViewport[0] = x1;
+	minViewport[1] = y1;
+
+	maxViewport[0] = x2;
+	maxViewport[1] = y2;
 }
 
 void SetWindow(double x1, double y1, double x2, double y2)
 {
-	minWindow.set(x1, y1);
-	maxWindow.set(x2, y2);
+    minWindow[0] = x1;
+    minWindow[1] = y1;
+
+    maxWindow[0] = x2;
+    maxWindow[1] = y2;
 }
 
-void WindowToViewport()
+void WindowToViewport(double pointW[DIM], double pointV[DIM]) // possibly take in a x, y (and later z?)
 {
-		
+	
+	// some point in world space (2,2)
+	// We know the widow is defined to go from (-1,-1) to (4,4)			
+	// Viewport is (-1,-1) to (1,1)
+	// - need to map point from window space to viewport	
+	
+	// vx -> xvmin + (xw-xwmin) * Sx
+	// vy -> yvmin + (yw-ywmin) * Sy	
+	//double pointV[DIM] = {};	
+	
+	translatePoint(pointW, pointV, -minWindow[0], -minWindow[1]);	
+	scalePoint(pointV, pointV, sx, sy);
+	translatePoint(pointV, pointV, minViewport[0], minViewport[1]);
+}
+
+void translatePoint(double pointW[DIM], double pointV[DIM], double xTran, double yTran)
+{
+	// Intilaize tranlsation matirx
+	double tMatrix[DIM+1][DIM+1] = {};
+
+	for(int i=0; i<DIM+1; i++) // setting diagonal 1s
+	{
+		tMatrix[i][i] = 1;
+	}
+
+	// Setting x and y translations
+	tMatrix[0][DIM] = xTran;
+	tMatrix[0][DIM] = yTran;
+
+	// Multiply point vector (world) by translation matrix
+	for(int i=0; i<DIM; i++)
+	{
+		for(int j=0; j<DIM+1; j++)
+		{
+			pointV[i] += tMatrix[i][j] * pointW[j]; 
+		}			
+	}				
+}	
+
+void scalePoint(double pointW[DIM], double pointV[DIM], double xScale, double yScale)
+{
+	// Initialize scaling matrix
+	double sMatrix[DIM+1][DIM+1] = {};
+	
+	// Setting x and y scale factors
+	sMatrix[0][0] = xScale;
+	sMatrix[1][1] = yScale;
+
+	// setting the final 1 in the bottom right
+	sMatrix[DIM][DIM] = 1;
+
+	// Multiply point vector by scaling matrix
+	for(int i=0; i<DIM; i++)
+    {
+        for(int j=0; j<DIM+1; j++)
+        {
+            pointV[i] += sMatrix[i][j] * pointW[j];
+        }
+    }
 }
 
 void MoveTo2D(double x, double y)

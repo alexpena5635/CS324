@@ -24,12 +24,6 @@ struct pixel {
     color c;
 };
 
-struct point {
-	double x;
-	double y;
-	void set(double setx, double sety) { x = setx; y = sety; } 
-};
-
 // This just represents the device or the pix/bit map
 class Canvas {
 	public:
@@ -58,14 +52,20 @@ void Line( Canvas& c, int x1, int y1, int x2, int y2, color color );
 void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName );
 
 // New functions
-
-std::shared_ptr<Canvas> InitGraphics(const int size, const point wMin, const point wMax, const point vMin, const point vMax);
+const int DIM = 2;
+std::shared_ptr<Canvas> InitGraphics(const int size, const double wMin[], const double wMax[], const double vMin[], const double vMax[]);
 
 void SetViewport(double x1, double y1, double x2, double y2); // set the viewport "corner" coords (global)
 void SetWindow(double x1, double y1, double x2, double y2);  // set the window "corner" coords (global)
-void WindowToViewport(); // Map a random point from the window to the viewport, based on how they were set
+
+void WindowToViewport(double pointW[DIM], double pointV[DIM]); // possibly take in a x, y(and later z?)
+void translatePoint(double pointW[DIM], double pointV[DIM], double xTran, double yTran);
+void scalePoint(double pointW[DIM], double pointV[DIM], double xScale, double yScale);
 
 void MoveTo2D(double x, double y); // On the canvas space, where the "pen" is movedto
 void DrawTo2D(Canvas &c, color color, double x, double y); // Go from the current spot to (x,y) an draw line
 
 #endif
+
+
+
