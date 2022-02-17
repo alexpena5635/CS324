@@ -52,7 +52,8 @@ void Line( Canvas& c, int x1, int y1, int x2, int y2, color color );
 void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName );
 
 // New functions
-const int DIM = 2;
+const int DIM = 3; // 2 for coords, 1 for homog
+
 std::shared_ptr<Canvas> InitGraphics(const int size, const double wMin[], const double wMax[], const double vMin[], const double vMax[]);
 
 void SetViewport(double x1, double y1, double x2, double y2); // set the viewport "corner" coords (global)

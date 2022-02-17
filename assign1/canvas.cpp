@@ -111,13 +111,17 @@ double minViewport[DIM], maxViewport[DIM];
 double minWindow[DIM], maxWindow[DIM];
 
 // Scaling factor for x and y
-double sx = (maxViewport[0]-minViewport[0]) / (maxWindow[0]-minWindow[0]);
-double sy = (maxViewport[1]-minViewport[1]) / (maxWindow[1]-minWindow[1]);
+double sx;
+double sy;
 
 std::shared_ptr<Canvas> InitGraphics(const int size, const double wMin[], const double wMax[], const double vMin[], const double vMax[])
 {
 	SetWindow(wMin[0], wMin[1], wMax[0], wMax[1]);
 	SetViewport(vMin[0], vMin[1], vMax[0], vMax[1]);
+
+	sx = (maxViewport[0]-minViewport[0]) / (maxWindow[0]-minWindow[0]);
+	sy = (maxViewport[1]-minViewport[1]) / (maxWindow[1]-minWindow[1]);
+
 	//pixmap size? maybe this intializes the canvas as well?	
 	std::shared_ptr<Canvas> pixmap (new Canvas(size, size, colors::WHITE));
 	
@@ -128,18 +132,22 @@ void SetViewport(double x1, double y1, double x2, double y2)
 {
 	minViewport[0] = x1;
 	minViewport[1] = y1;
+	minViewport[2] = 1;
 
 	maxViewport[0] = x2;
 	maxViewport[1] = y2;
+	maxViewport[2] = 1;
 }
 
 void SetWindow(double x1, double y1, double x2, double y2)
 {
     minWindow[0] = x1;
     minWindow[1] = y1;
+	minWindow[2] = 1;
 
     maxWindow[0] = x2;
     maxWindow[1] = y2;
+	maxWindow[2] = 1;
 }
 
 void WindowToViewport(double pointW[DIM], double pointV[DIM]) // possibly take in a x, y (and later z?)
@@ -154,55 +162,82 @@ void WindowToViewport(double pointW[DIM], double pointV[DIM]) // possibly take i
 	// vy -> yvmin + (yw-ywmin) * Sy	
 	//double pointV[DIM] = {};	
 	
-	translatePoint(pointW, pointV, -minWindow[0], -minWindow[1]);	
+	/* 
+	std::cout << "minWindow: x=" << minWindow[0] << " y=" << minWindow[1] << std::endl;
+	std::cout << "maxWindow: x=" << maxWindow[0] << " y=" << maxWindow[1] << std::endl;
+	std::cout << "minViewport: x=" << minViewport[0] << " y=" << minViewport[1] << std::endl;
+	std::cout << "maxViewport: x=" << maxViewport[0] << " y=" << maxViewport[1] << std::endl;
+	std::cout << "sx=" << sx << " sy=" << sy << std::endl;
+	*/
+	
+	//translatePoint(pointW, pointV, -minWindow[0], -minWindow[1]);	
+	translatePoint(pointW, pointV, minViewport[0], minViewport[1]);	
+	std::cout << "pointV after 1st transl:  x =" << pointV[0] << " y=" << pointV[1] << std::endl; 
+	
 	scalePoint(pointV, pointV, sx, sy);
-	translatePoint(pointV, pointV, minViewport[0], minViewport[1]);
+	
+	std::cout << "pointV after scale:  x =" << pointV[0] << " y=" << pointV[1] << std::endl; 
+	//translatePoint(pointV, pointV, minViewport[0], minViewport[1]);
+	translatePoint(pointV, pointV, -minWindow[0], -minWindow[1]);
+	std::cout << "pointV after 2nd transl: x=" << pointV[0] << " y=" << pointV[1] << std::endl;
+	
 }
 
 void translatePoint(double pointW[DIM], double pointV[DIM], double xTran, double yTran)
 {
 	// Intilaize tranlsation matirx
-	double tMatrix[DIM+1][DIM+1] = {};
+	double tMatrix[DIM][DIM] = {};
 
-	for(int i=0; i<DIM+1; i++) // setting diagonal 1s
+	for(int i=0; i<DIM; i++) // setting diagonal 1s
 	{
 		tMatrix[i][i] = 1;
 	}
 
 	// Setting x and y translations
-	tMatrix[0][DIM] = xTran;
-	tMatrix[0][DIM] = yTran;
+	tMatrix[0][DIM-1] = xTran;
+	tMatrix[0][DIM-1] = yTran;
+
+	double newPoint[DIM] = {};
 
 	// Multiply point vector (world) by translation matrix
 	for(int i=0; i<DIM; i++)
 	{
-		for(int j=0; j<DIM+1; j++)
+		for(int j=0; j<DIM; j++)
 		{
-			pointV[i] += tMatrix[i][j] * pointW[j]; 
+			//pointV[i] += tMatrix[i][j] * pointW[j]; 
+			newPoint[i] += tMatrix[i][j] * pointW[j]; 
 		}			
-	}				
+	}
+	
+	for(int i=0; i<DIM; i++)
+		pointV[i] = newPoint[i];				
 }	
 
 void scalePoint(double pointW[DIM], double pointV[DIM], double xScale, double yScale)
 {
 	// Initialize scaling matrix
-	double sMatrix[DIM+1][DIM+1] = {};
+	double sMatrix[DIM][DIM] = {};
 	
 	// Setting x and y scale factors
 	sMatrix[0][0] = xScale;
 	sMatrix[1][1] = yScale;
 
 	// setting the final 1 in the bottom right
-	sMatrix[DIM][DIM] = 1;
+	sMatrix[DIM-1][DIM-1] = 1;
+
+	double newPoint[DIM] = {};
 
 	// Multiply point vector by scaling matrix
 	for(int i=0; i<DIM; i++)
     {
-        for(int j=0; j<DIM+1; j++)
+        for(int j=0; j<DIM; j++)
         {
-            pointV[i] += sMatrix[i][j] * pointW[j];
+            newPoint[i] += sMatrix[i][j] * pointW[j];
         }
     }
+
+	for(int i=0; i<DIM; i++)
+        pointV[i] = newPoint[i];
 }
 
 void MoveTo2D(double x, double y)

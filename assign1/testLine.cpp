@@ -47,6 +47,18 @@ int main()
 	std::string filename2( "mytest.pbm" );
 	SaveCanvasToFile( *pixmap, filename2 );
     
+
+
+	double pointW[DIM] = {1.5, 1.5};
+	double pointV[DIM] = {};
+	
+	std::cout << "World Coords: x = " << pointW[0] << " y = " << pointW[1] << std::endl; 
+	std::cout << "Viewport Coords Before: x = " << pointV[0] << " y = " << pointV[1] << std::endl; 
+	
+	WindowToViewport(pointW, pointV);
+	
+	std::cout << "Viewport Coords After: x = " << pointV[0] << " y = " << pointV[1] << std::endl; 
+
     return 0;
 }
 
