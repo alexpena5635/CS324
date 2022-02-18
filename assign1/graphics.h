@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <memory>
+#include <iostream>
 
 struct color {
     uint8_t red;
@@ -51,20 +52,36 @@ void Line( Canvas& c, int x1, int y1, int x2, int y2, color color );
 
 void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName );
 
-// New functions
+// NEW FUNCS//////////////////////////
+
+// 2D Point struct, with constructor, set function, and print
+struct point2D {
+    double x;
+	double y;
+	double h; // homog
+	point2D() { x=0.0; y=0.0; h=0.0;}
+	point2D(double x1, double y1, double h1=1) {x=x1; y=y1; h=h1;}
+	void set(double x1, double y1, double h1) {x=x1; y=y1; h=h1;}
+
+	friend std::ostream& operator<<(std::ostream& os, const point2D& p){
+		return os << "Point\n - x: " << p.x << "\n - y: " << p.y << "\n - z: " << p.h << std::endl;
+	}
+};
+
 const int DIM = 3; // 2 for coords, 1 for homog
 
-std::shared_ptr<Canvas> InitGraphics(const int size, const double wMin[], const double wMax[], const double vMin[], const double vMax[]);
+std::shared_ptr<Canvas> InitGraphics(const int size, const point2D w_min, const point2D w_max, const point2D v_min, const point2D v_max);
 
 void SetViewport(double x1, double y1, double x2, double y2); // set the viewport "corner" coords (global)
 void SetWindow(double x1, double y1, double x2, double y2);  // set the window "corner" coords (global)
 
-void WindowToViewport(double pointW[DIM], double pointV[DIM]); // possibly take in a x, y(and later z?)
-void ViewportToPixmap(double canvasSize, double pointV[DIM], double pointP[DIM]);
-void translatePoint(double pointW[DIM], double pointV[DIM], double xTran, double yTran);
-void scalePoint(double pointW[DIM], double pointV[DIM], double xScale, double yScale);
+void WindowToViewport(point2D in_vector, point2D& out_vector); 
+void ViewportToPixmap(double canvas_size, point2D in_vector, point2D& out_vector);
 
-void MoveTo2D(double x, double y); // On the canvas space, where the "pen" is movedto
+void translatePoint(point2D in_vector, point2D& out_vector, double x_tran, double y_tran);
+void scalePoint(point2D in_vector, point2D& out_vector, double x_scale, double y_scale);
+
+void MoveTo2D(double x, double y); // On the canvas space, where the "pen" is moved to
 void DrawTo2D(Canvas &c, color color, double x, double y); // Go from the current spot to (x,y) an draw line
 
 #endif
