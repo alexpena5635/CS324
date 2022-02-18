@@ -52,8 +52,6 @@ void Line( Canvas& c, int x1, int y1, int x2, int y2, color color );
 
 void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName );
 
-// NEW FUNCS//////////////////////////
-
 // 2D Point struct, with constructor, set function, and print
 struct point2D {
     double x;
@@ -84,7 +82,6 @@ void scalePoint(point2D &in_vector, point2D& out_vector, double x_scale, double 
 void MoveTo2D(double x, double y); // On the canvas space, where the "pen" is moved to
 void DrawTo2D(Canvas &c, color color, double x, double y); // Go from the current spot to (x,y) an draw line
 
-// Make sure the in_vectors are pass by refernee as well! It's needed
 
 #endif
 

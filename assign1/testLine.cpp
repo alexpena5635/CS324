@@ -11,6 +11,12 @@ c++ -std=c++14 testLine.cpp canvas.cpp
 
  */
 
+
+/*
+	- Functions to draw equation 1 and 2 are defined here
+	- It got hectic towards the end so this file is a mess in terms of what it's calling currently
+*/
+
 #include <iostream>
 #include <cmath>
 
@@ -78,6 +84,7 @@ int main()
     return 0;
 }
 
+// Draw an x and y axis
 void drawAxis(Canvas& pixmap, color color, point2D origin, point2D min,  point2D max)
 {
 	MoveTo2D(min.x, origin.y);
@@ -86,6 +93,7 @@ void drawAxis(Canvas& pixmap, color color, point2D origin, point2D min,  point2D
     DrawTo2D(pixmap, color, origin.x, max.y);
 }
 
+// Test the code from sample plot
 void plotTest(Canvas& pixmap, point2D origin, point2D min,  point2D max)
 {
 	drawAxis(pixmap, colors::BLACK, origin, min, max);
@@ -102,6 +110,7 @@ void plotTest(Canvas& pixmap, point2D origin, point2D min,  point2D max)
 	
 }
 
+// Draw the first equation
 void plotEq1(Canvas& pixmap, point2D origin)
 {
 	point2D min(0, -3 + origin.y);
@@ -120,6 +129,7 @@ void plotEq1(Canvas& pixmap, point2D origin)
 	}
 }
 
+// Draw the second equation
 void plotEq2(Canvas& pixmap, point2D origin)
 {
 	point2D min(-15, -15);

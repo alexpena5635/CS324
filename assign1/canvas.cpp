@@ -1,4 +1,5 @@
 /* canvas.cpp
+ * Starter code from lecture notes
  */
  
 #include <fstream>
@@ -103,20 +104,20 @@ void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName )
     }	
 }
 
-////////////// New funcs
-
 // The corner points of the window and viewport
-point2D w_min, w_max;
-point2D v_min, v_max;
+static point2D w_min, w_max;
+static point2D v_min, v_max;
 
 // Current position from "move" is set here"
-point2D currentPos;
+static point2D currentPos;
 
 // Scaling factor for x and y
-double sx;
-double sy;
+static double sx;
+static double sy;
 
-
+// InitGraphics()
+// - sets the window, viewport, and cavas up
+// - return the canvas
 std::shared_ptr<Canvas> InitGraphics(const int size, const point2D w_min, const point2D w_max, const point2D v_min, const point2D v_max)
 {
 	SetWindow(w_min.x, w_min.y, w_max.x, w_max.y);
@@ -125,25 +126,26 @@ std::shared_ptr<Canvas> InitGraphics(const int size, const point2D w_min, const 
 	// sx = (v_max.x-v_min.x) / (v_max.x-w_min.x); // Scaling factor should be diff of viewport poitns over diff of window points?
 	sx = (v_max.x - v_min.x) / (w_max.x - w_min.x);
 	sy = (v_max.y - v_min.y) / (w_max.y - w_min.y);
-
-	//pixmap size? maybe this intializes the canvas as well?	
-	std::shared_ptr<Canvas> pixmap (new Canvas(size, size, colors::WHITE));
 	
+	std::shared_ptr<Canvas> pixmap (new Canvas(size, size, colors::WHITE));
 	return pixmap;	
 }
 
+// Set the viewport corner coords
 void SetViewport(double x1, double y1, double x2, double y2)
 {
 	v_min.set(x1, y1, 1);
 	v_max.set(x2, y2, 1);
 }
 
+// Set the window corner coords
 void SetWindow(double x1, double y1, double x2, double y2)
 {
 	w_min.set(x1, y1, 1);
     v_max.set(x2, y2, 1);
 }
 
+// Convert from window to viewport coords
 void WindowToViewport(point2D& in_vector, point2D& out_vector)
 {
 	// vx -> xvmin + (xw-xwmin) * Sx
@@ -168,12 +170,14 @@ void WindowToViewport(point2D& in_vector, point2D& out_vector)
 	// The point is now translated into viewport
 }
 
+// Convert from the viewport to the pixmap
 void ViewportToPixmap(double canvas_size, point2D& in_vector, point2D& out_vector)
 {
 	double scaleX = canvas_size / (v_max.x-v_min.x);
     double scaleY = canvas_size / (v_max.y-v_min.y);
 
 	// Translate from viewport to pixmap
+	// Using same logic as WindowToViewport()
 	translatePoint(in_vector, out_vector, 0, 0); //smallest spot on cavas is always 0,0	
 	scalePoint(out_vector, out_vector, scaleX, scaleY);
 	translatePoint(out_vector, out_vector, -v_min.x, -v_min.y);
@@ -182,6 +186,7 @@ void ViewportToPixmap(double canvas_size, point2D& in_vector, point2D& out_vecto
 	out_vector.y = canvas_size - out_vector.y;
 }
 
+// Translate any given 2-D vector in homogenougs coords according to the translation matrix
 void translatePoint(point2D& in_vector, point2D& out_vector, double x_tran, double y_tran)
 {
 	// Intilaize tranlsation matirx
@@ -217,6 +222,7 @@ void translatePoint(point2D& in_vector, point2D& out_vector, double x_tran, doub
 	out_vector.set(newPoint[0], newPoint[1], newPoint[2]);				
 }	
 
+// Multiply any given 2-D homog coord by a scaling matrix, given the scale
 void scalePoint(point2D& in_vector, point2D& out_vector, double x_scale, double y_scale)
 {
 	// Initialize scaling matrix
@@ -249,12 +255,14 @@ void scalePoint(point2D& in_vector, point2D& out_vector, double x_scale, double 
 	out_vector.set(newPoint[0], newPoint[1], newPoint[2]);	
 }
 
+// Move to a 2D world coordinate, store it for later
 void MoveTo2D(double x, double y)
 {
 	// Setting some global that retains the world position we have "moved to"
 	currentPos.set(x,y,1);
 }
 
+// Draw a line on the canvas
 void DrawTo2D(Canvas &c, color color, double x, double y)
 {
 	// - Translate world coord to viewport (WindowToViewport)
