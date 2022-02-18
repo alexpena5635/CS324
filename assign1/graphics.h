@@ -61,7 +61,7 @@ struct point2D {
 	double h; // homog
 	point2D() { x=0.0; y=0.0; h=0.0;}
 	point2D(double x1, double y1, double h1=1) {x=x1; y=y1; h=h1;}
-	void set(double x1, double y1, double h1) {x=x1; y=y1; h=h1;}
+	void set(double x1, double y1, double h1=1) {x=x1; y=y1; h=h1;}
 
 	friend std::ostream& operator<<(std::ostream& os, const point2D& p){
 		return os << "Point\n - x: " << p.x << "\n - y: " << p.y << "\n - z: " << p.h << std::endl;

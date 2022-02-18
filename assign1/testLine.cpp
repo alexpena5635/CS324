@@ -33,7 +33,7 @@ int main()
 {	
 	// double windowMin[DIM] = {-10.0, -1.0} , windowMax[DIM] = {10.0, 8.0};
 	// double viewMin[DIM] = {-1.0, -1.0} , viewMax[DIM] = {1.0, 1.0};
-	point2D w_min(-5.0, -5.0) , w_max(5.0, 5.0);
+	point2D w_min(-10.0, -1.0) , w_max(10.0, 8.0);
 	point2D v_min(-1.0, -1.0) , v_max(1.0, 1.0);
 
 	const int pixmapSize = 1000;
@@ -41,26 +41,36 @@ int main()
 	std::shared_ptr<Canvas> pixmap = InitGraphics(pixmapSize, w_min, w_max, v_min, v_max);
 	
 
-	point2D w_point(-5.0, 6.0, 1.0);
-	point2D v_point(0.0, 0.0, 1.0);
-	std::cout << "Before:\n" << w_point << std::endl;
+	// point2D w_point(-5.0, 6.0, 1.0);
+	// point2D v_point(0.0, 0.0, 1.0);
+	// std::cout << "Before:\n" << w_point << std::endl;
 
-	WindowToViewport(w_point, v_point);
+	// WindowToViewport(w_point, v_point);
 
-	std::cout << "After:\n" << v_point << std::endl;
-	return 0;
+	// std::cout << "After:\n" << v_point << std::endl;
+	// return 0;
 
 
-	// point2D origin( 
-	// 	((w_max.x+w_max.x)/1.5),  
-	// 	((w_max.y+w_max.y)/1.5) 
-	// );
+	point2D origin( 
+		((w_max.x+w_min.x)/2.0),   // I have messed up these formulas multiple times
+		((w_max.y+w_min.y)/2.0) 
+	);
 	// double min[DIM] = {-3.5, 1.0};
 	// double max[DIM] = {3.5, 7.5};
 
 	// plotTest(*pixmap, origin, min, max);
 	//plotEq1(*pixmap, origin);
 	//plotEq2(*pixmap, origin);
+
+	// v_min.set(-5.0, -5.0);
+	// v_max.set(5.0, 5.0);
+
+	std::cout << "Origin: \n" << origin << std::endl;
+
+	MoveTo2D(w_min.x, origin.y);
+	DrawTo2D(*pixmap, colors::BLACK, w_max.x, origin.y);
+	MoveTo2D(origin.x, w_min.y);
+    DrawTo2D(*pixmap, colors::BLACK, origin.x, w_max.y);
 	
 
 	std::string filename2( "mytest.pbm" );

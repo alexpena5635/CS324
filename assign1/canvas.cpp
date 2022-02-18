@@ -122,8 +122,9 @@ std::shared_ptr<Canvas> InitGraphics(const int size, const point2D w_min, const 
 	SetWindow(w_min.x, w_min.y, w_max.x, w_max.y);
 	SetViewport(v_min.x, v_min.y, v_max.x, v_max.y);
 
-	sx = (v_max.x-v_min.x) / (v_max.x-w_min.x);
-	sy = (v_max.y-v_min.y) / (v_max.y-w_min.y);
+	// sx = (v_max.x-v_min.x) / (v_max.x-w_min.x); // Scaling factor should be diff of viewport poitns over diff of window points?
+	sx = (v_max.x - v_min.x) / (w_max.x - w_min.x);
+	sy = (v_max.y - v_min.y) / (w_max.y - w_min.y);
 
 	//pixmap size? maybe this intializes the canvas as well?	
 	std::shared_ptr<Canvas> pixmap (new Canvas(size, size, colors::WHITE));
