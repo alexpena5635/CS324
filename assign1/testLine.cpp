@@ -16,6 +16,8 @@ c++ -std=c++14 testLine.cpp canvas.cpp
 
 #include "graphics.h"
 
+void drawAxis(Canvas& pixmap, color color, double origin[DIM], double min[DIM], double max[DIM]);
+void plotTest(Canvas& pixmap, color color, double origin[DIM], double min[DIM], double max[DIM]);
 
 int main()
 {	
@@ -26,24 +28,38 @@ int main()
 	
 	std::shared_ptr<Canvas> pixmap = InitGraphics(pixmapSize, windowMin, windowMax, viewMin, viewMax);
 	
-	MoveTo2D(-3.5, 1.0);
-	DrawTo2D(*pixmap, colors::BLACK, 3.5, 1.0);
-	MoveTo2D(0.0, -1.0);
-    DrawTo2D(*pixmap, colors::BLACK, 0.0, 7.5);
-	
-	
-	double x = -2.0;
-	double xInc = 4.0 / 100.0;
-	MoveTo2D(x, exp(-x));
-	for(int i = 0; i <= 100; i++)
-	{
-		x += xInc;
-		DrawTo2D(*pixmap, colors::BLUE, x, exp(-x));
-		MoveTo2D(x, exp(-x));
-	}
+	double origin[DIM] = {0.0, 2.0};
+	double min[DIM] = {-3.5, 1.0};
+	double max[DIM] = {3.5, 7.5};
+
+	//plotTest(*pixmap, colors::BLACK, origin, min, max);
 	
 
 	std::string filename2( "mytest.pbm" );
 	SaveCanvasToFile( *pixmap, filename2 );
     return 0;
+}
+
+void drawAxis(Canvas& pixmap, color color, double origin[DIM], double min[DIM], double max[DIM])
+{
+	MoveTo2D(min[0], origin[1]);
+	DrawTo2D(pixmap, color, max[0], origin[1]);
+	MoveTo2D(origin[0], min[1]);
+    DrawTo2D(pixmap, color, origin[0], max[1]);
+}
+
+void plotTest(Canvas& pixmap, color color, double origin[DIM], double min[DIM], double max[DIM])
+{
+	drawAxis(pixmap, colors::BLACK, origin, min, max);
+
+	double x = min[0];
+	double xInc = 4.0 / 100.0;
+	MoveTo2D(x, exp(-x) + origin[1]);
+	for(int i = 0; i <= 200; i++)
+	{
+		x += xInc;
+		DrawTo2D(pixmap, colors::BLUE, x, exp(-x) + origin[1]);
+		MoveTo2D(x, exp(-x) + origin[1]);
+	}
+	
 }
