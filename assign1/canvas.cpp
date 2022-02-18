@@ -190,9 +190,17 @@ void ViewportToPixmap(double canvasSize, double pointV[DIM], double pointP[DIM])
 {
 	double scaleX = canvasSize / (maxViewport[0]-minViewport[0]);
     double scaleY = canvasSize / (maxViewport[1]-minViewport[1]);
+
+	//pointV[1] *= -1;
+	//scaleY *= -1;	
+
+	// This is the top left though, need bottom left
 	translatePoint(pointV, pointP, 0, 0); //smallest spot on cavas is always 0,0	
 	scalePoint(pointP, pointP, scaleX, scaleY);
 	translatePoint(pointP, pointP, -minViewport[0], -minViewport[1]);
+
+	// Filp the y
+	pointP[1] = canvasSize - pointP[1];
 }
 
 void translatePoint(double pointW[DIM], double pointV[DIM], double xTran, double yTran)
@@ -278,10 +286,14 @@ void DrawTo2D(Canvas &c, color color, double x, double y)
 	// Viewport to canvas space/coords?	
 	// This works!!!! but its like a full screen with only the viewport shown
 	// need somehting different for sgementing the viewport on the screen
-	// this is like a full scale!
-	ViewportToPixmap(c.Width(), startPoint, startPoint);
+	// changing the size passed in changes the scale of the pixmap
+	ViewportToPixmap(c.Width(), startPoint, startPoint); 
 	ViewportToPixmap(c.Width(), endPoint, endPoint);
 	
-	Line(c, startPoint[0], startPoint[1], endPoint[0], endPoint[1], color);
+	std::cout << "start: x=" << startPoint[0] << " y=" << startPoint[1] << std::endl;
+	std::cout << "end: x=" << endPoint[0] << " y=" << endPoint[1] << std::endl;
+
+	// Scales to match vp and window, like a fullscreen drawing
+	Line(c, startPoint[0], startPoint[1], endPoint[0], endPoint[1], color);	
 	
 }
