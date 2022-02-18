@@ -143,7 +143,7 @@ void SetWindow(double x1, double y1, double x2, double y2)
     v_max.set(x2, y2, 1);
 }
 
-void WindowToViewport(point2D in_vector, point2D& out_vector)
+void WindowToViewport(point2D& in_vector, point2D& out_vector)
 {
 	// vx -> xvmin + (xw-xwmin) * Sx
 	// vy -> yvmin + (yw-ywmin) * Sy	
@@ -167,7 +167,7 @@ void WindowToViewport(point2D in_vector, point2D& out_vector)
 	// The point is now translated into viewport
 }
 
-void ViewportToPixmap(double canvas_size, point2D in_vector, point2D& out_vector)
+void ViewportToPixmap(double canvas_size, point2D& in_vector, point2D& out_vector)
 {
 	double scaleX = canvas_size / (v_max.x-v_min.x);
     double scaleY = canvas_size / (v_max.y-v_min.y);
@@ -181,7 +181,7 @@ void ViewportToPixmap(double canvas_size, point2D in_vector, point2D& out_vector
 	out_vector.y = canvas_size - out_vector.y;
 }
 
-void translatePoint(point2D in_vector, point2D& out_vector, double x_tran, double y_tran)
+void translatePoint(point2D& in_vector, point2D& out_vector, double x_tran, double y_tran)
 {
 	// Intilaize tranlsation matirx
 	double tMatrix[DIM][DIM] = {};
@@ -216,7 +216,7 @@ void translatePoint(point2D in_vector, point2D& out_vector, double x_tran, doubl
 	out_vector.set(newPoint[0], newPoint[1], newPoint[2]);				
 }	
 
-void scalePoint(point2D in_vector, point2D& out_vector, double x_scale, double y_scale)
+void scalePoint(point2D& in_vector, point2D& out_vector, double x_scale, double y_scale)
 {
 	// Initialize scaling matrix
 	double sMatrix[DIM][DIM] = {};

@@ -75,14 +75,16 @@ std::shared_ptr<Canvas> InitGraphics(const int size, const point2D w_min, const 
 void SetViewport(double x1, double y1, double x2, double y2); // set the viewport "corner" coords (global)
 void SetWindow(double x1, double y1, double x2, double y2);  // set the window "corner" coords (global)
 
-void WindowToViewport(point2D in_vector, point2D& out_vector); 
-void ViewportToPixmap(double canvas_size, point2D in_vector, point2D& out_vector);
+void WindowToViewport(point2D &in_vector, point2D& out_vector); 
+void ViewportToPixmap(double canvas_size, point2D& in_vector, point2D& out_vector);
 
-void translatePoint(point2D in_vector, point2D& out_vector, double x_tran, double y_tran);
-void scalePoint(point2D in_vector, point2D& out_vector, double x_scale, double y_scale);
+void translatePoint(point2D &in_vector, point2D& out_vector, double x_tran, double y_tran);
+void scalePoint(point2D &in_vector, point2D& out_vector, double x_scale, double y_scale);
 
 void MoveTo2D(double x, double y); // On the canvas space, where the "pen" is moved to
 void DrawTo2D(Canvas &c, color color, double x, double y); // Go from the current spot to (x,y) an draw line
+
+// Make sure the in_vectors are pass by refernee as well! It's needed
 
 #endif
 
