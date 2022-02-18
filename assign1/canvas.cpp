@@ -155,35 +155,17 @@ void SetWindow(double x1, double y1, double x2, double y2)
 
 void WindowToViewport(double pointW[DIM], double pointV[DIM]) // possibly take in a x, y (and later z?)
 {
-	
-	// some point in world space (2,2)
-	// We know the widow is defined to go from (-1,-1) to (4,4)			
-	// Viewport is (-1,-1) to (1,1)
-	// - need to map point from window space to viewport	
-	
 	// vx -> xvmin + (xw-xwmin) * Sx
 	// vy -> yvmin + (yw-ywmin) * Sy	
-	//double pointV[DIM] = {};	
-	
-	/* 
-	std::cout << "minWindow: x=" << minWindow[0] << " y=" << minWindow[1] << std::endl;
-	std::cout << "maxWindow: x=" << maxWindow[0] << " y=" << maxWindow[1] << std::endl;
-	std::cout << "minViewport: x=" << minViewport[0] << " y=" << minViewport[1] << std::endl;
-	std::cout << "maxViewport: x=" << maxViewport[0] << " y=" << maxViewport[1] << std::endl;
-	std::cout << "sx=" << sx << " sy=" << sy << std::endl;
-	*/
-	
-	//translatePoint(pointW, pointV, -minWindow[0], -minWindow[1]);	
-	translatePoint(pointW, pointV, minViewport[0], minViewport[1]);	
-	//std::cout << "pointV after 1st transl:  x =" << pointV[0] << " y=" << pointV[1] << std::endl; 
-	
+
+	// Multiply 2D point vector by 3D translation matrix of the min viewport point
+	translatePoint(pointW, pointV, minViewport[0], minViewport[1]);
+	// Multiply 2D point vector by 3D scaling matrix with the scaling factors
 	scalePoint(pointV, pointV, sx, sy);
-	
-	//std::cout << "pointV after scale:  x =" << pointV[0] << " y=" << pointV[1] << std::endl; 
-	//translatePoint(pointV, pointV, minViewport[0], minViewport[1]);
+	// Multiply 2D point vector by 3D translation matrix of the min window point
 	translatePoint(pointV, pointV, -minWindow[0], -minWindow[1]);
-	//std::cout << "pointV after 2nd transl: x=" << pointV[0] << " y=" << pointV[1] << std::endl;
-	
+
+	// The point is now translated into viewport
 }
 
 void ViewportToPixmap(double canvasSize, double pointV[DIM], double pointP[DIM])
@@ -191,15 +173,12 @@ void ViewportToPixmap(double canvasSize, double pointV[DIM], double pointP[DIM])
 	double scaleX = canvasSize / (maxViewport[0]-minViewport[0]);
     double scaleY = canvasSize / (maxViewport[1]-minViewport[1]);
 
-	//pointV[1] *= -1;
-	//scaleY *= -1;	
-
-	// This is the top left though, need bottom left
+	// Translate from viewport to pixmap
 	translatePoint(pointV, pointP, 0, 0); //smallest spot on cavas is always 0,0	
 	scalePoint(pointP, pointP, scaleX, scaleY);
 	translatePoint(pointP, pointP, -minViewport[0], -minViewport[1]);
 
-	// Filp the y
+	// Filp the y-axis 
 	pointP[1] = canvasSize - pointP[1];
 }
 
@@ -269,9 +248,6 @@ void MoveTo2D(double x, double y)
 
 void DrawTo2D(Canvas &c, color color, double x, double y)
 {
-	// Calling the line function on the canvas from the global we "moved to"
-	// ... to the destionation
-	
 	// But before do this, need to..
 	// - Translate world coord to viewport (WindowToViewport)
 	// - Translate viewport coords to canvas/pixmap coordinates	
@@ -284,16 +260,9 @@ void DrawTo2D(Canvas &c, color color, double x, double y)
 	WindowToViewport(windowEnd, endPoint); // possibly take in a x, y (and later z?)
 
 	// Viewport to canvas space/coords?	
-	// This works!!!! but its like a full screen with only the viewport shown
-	// need somehting different for sgementing the viewport on the screen
-	// changing the size passed in changes the scale of the pixmap
 	ViewportToPixmap(c.Width(), startPoint, startPoint); 
 	ViewportToPixmap(c.Width(), endPoint, endPoint);
 	
-	std::cout << "start: x=" << startPoint[0] << " y=" << startPoint[1] << std::endl;
-	std::cout << "end: x=" << endPoint[0] << " y=" << endPoint[1] << std::endl;
-
 	// Scales to match vp and window, like a fullscreen drawing
 	Line(c, startPoint[0], startPoint[1], endPoint[0], endPoint[1], color);	
-	
 }
