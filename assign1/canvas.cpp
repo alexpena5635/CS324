@@ -146,11 +146,12 @@ void SetWindow(double x1, double y1, double x2, double y2)
 }
 
 // Convert from window to viewport coords
+// - Need to multiply all of the transformation matricies together first, then multiply against point
 void WindowToViewport(point2D& in_vector, point2D& out_vector)
 {
 	// vx -> xvmin + (xw-xwmin) * Sx
 	// vy -> yvmin + (yw-ywmin) * Sy	
-
+	std::cout << "####### Window to Viewport Start ########" << std::endl;
 	// Multiply 2D point vector by 3D translation matrix of the min viewport point
 	translatePoint(in_vector, out_vector, v_min.x, v_min.y);
 
@@ -166,7 +167,8 @@ void WindowToViewport(point2D& in_vector, point2D& out_vector)
 	translatePoint(out_vector, out_vector, -w_min.x, -w_min.y);
 
 	std::cout << "After 2nd translation\n" << out_vector << std::endl;
-
+	
+	std::cout << "####### END ########" << std::endl;
 	// The point is now translated into viewport
 }
 
@@ -185,6 +187,7 @@ void ViewportToPixmap(double canvas_size, point2D& in_vector, point2D& out_vecto
 	// Filp the y-axis 
 	out_vector.y = canvas_size - out_vector.y;
 }
+
 
 // Translate any given 2-D vector in homogenougs coords according to the translation matrix
 void translatePoint(point2D& in_vector, point2D& out_vector, double x_tran, double y_tran)
@@ -206,15 +209,22 @@ void translatePoint(point2D& in_vector, point2D& out_vector, double x_tran, doub
 	double in_point[DIM] = {in_vector.x, in_vector.y, in_vector.h};
 
 	// Multiply point vector (world) by translation matrix
-	for(int i=0; i<DIM; i++)
+	// BUG FIXED!
+	// - Was multipying the vector by the matrix, should do the column vector on the right
+	std::cout << "Translation matrix" << std::endl;
+	// Each row in the matrix
+	for(int i=0; i<DIM; i++) 
 	{
+		// Each column for that row
 		for(int j=0; j<DIM; j++)
 		{
 			//pointV[i] += tMatrix[i][j] * pointW[j]; // This was causing us to multiply across matrix rows, and not cols
-			newPoint[i] += tMatrix[j][i] * in_point[j]; 
-			// std::cout << tMatrix[i][j] << "\t";
+			//newPoint[i] += tMatrix[j][i] * in_point[j]; Also causing issues bc of order of vector mult?
+			// For the new value at [x y h] (i), add up the corresponding row multiplyied against the old [x y h], for each row
+			newPoint[i] += tMatrix[i][j] * in_point[j]; 
+			std::cout << tMatrix[i][j] << "\t";
 		}
-		// std::cout << std::endl;			
+		std::cout << std::endl;			
 	}
 	
 	// for(int i=0; i<DIM; i++)
@@ -239,15 +249,16 @@ void scalePoint(point2D& in_vector, point2D& out_vector, double x_scale, double 
 	double in_point[DIM] = {in_vector.x, in_vector.y, in_vector.h};
 
 	// Multiply point vector by scaling matrix
+	std::cout << "Scaling matrix" << std::endl;
 	for(int i=0; i<DIM; i++)
     {
         for(int j=0; j<DIM; j++)
         {
 			// newPoint[i] += sMatrix[i][j] * in_point[j]; // this is something i fixed in translaate, here to?
             newPoint[i] += sMatrix[j][i] * in_point[j];
-			// std::cout << sMatrix[i][j] << "\t";
+			std::cout << sMatrix[i][j] << "\t";
 		}
-		// std::cout << std::endl;			
+		std::cout << std::endl;			
     }
 
 	// for(int i=0; i<DIM; i++)

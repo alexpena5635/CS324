@@ -52,6 +52,8 @@ void Line( Canvas& c, int x1, int y1, int x2, int y2, color color );
 
 void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName );
 
+const int DIM = 3; // 2 for coords, 1 for homog
+
 // 2D Point struct, with constructor, set function, and print
 struct point2D {
     double x;
@@ -66,7 +68,7 @@ struct point2D {
 	}
 };
 
-const int DIM = 3; // 2 for coords, 1 for homog
+
 
 std::shared_ptr<Canvas> InitGraphics(const int size, const point2D w_min, const point2D w_max, const point2D v_min, const point2D v_max);
 
