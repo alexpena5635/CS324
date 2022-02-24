@@ -33,13 +33,23 @@ Matrix::Matrix(int ndim, matrixtype type/*=custom*/, double tx, double ty, doubl
     };
 }
 
-Matrix::~Matrix()
+// Matrix::~Matrix()
+// {
+//     // Deallocate the array representing the matrix
+//     for (int i = 0; i < dim; ++i) {
+//         delete[] m[i];
+//     }
+//     delete[] m;
+// }
+void Matrix::deallocate()
 {
     // Deallocate the array representing the matrix
     for (int i = 0; i < dim; ++i) {
         delete[] m[i];
+        m[i] = NULL;
     }
     delete[] m;
+    m = NULL;
 }
 
 
@@ -78,6 +88,7 @@ void Matrix::setScalingMatrix2D(double sx, double sy)
 
 void Matrix::setIdentityMatrix()
 {
+    resetMatrix(); // needed to do this as we were not intialzing the values!
     // Setting identity matrix
     for(int i=0; i<dim; i++) 
 	{
@@ -120,7 +131,7 @@ Matrix& operator*(const Matrix& m1, const Matrix& m2)
 
 // Operator * overload for a matrix and a point (2d matrix against a 2d point, and so on)
 // - We assume matrix has same amount of cols as vector does rows
-point2D& operator*(const Matrix& m1, point2D& p)
+point2D& operator*(const Matrix& m1, const point2D& p)
 {
     int dim = 3;
 
@@ -136,11 +147,12 @@ point2D& operator*(const Matrix& m1, point2D& p)
         }
     }
 
-    p.set(newPoint[0], newPoint[1], newPoint[2]);
-    return p;
+    point2D *p2 = new point2D;
+    p2->set(newPoint[0], newPoint[1], newPoint[2]);
+    return *p2;
 }
 
-
+/*
 // Testing matrix mult
 int main()
 {
@@ -164,3 +176,4 @@ int main()
 
     std::cout << "Viewport point: " << resM * p << std::endl;
 }
+*/

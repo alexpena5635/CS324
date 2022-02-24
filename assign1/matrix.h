@@ -11,8 +11,9 @@ enum matrixtype {custom, translation, rotation, scaling};
 class Matrix{
     public:
         Matrix(int ndim, matrixtype type = custom, double tx=0, double ty=0, double sx=0, double sy=0);
-        ~Matrix();
+        //~Matrix();
         void print();
+        void deallocate();
 
 
         double **m;
@@ -27,6 +28,6 @@ class Matrix{
 };
 
 Matrix& operator*(const Matrix& m1, const Matrix& m2);
-point2D& operator*(const Matrix& m1, point2D& p);
+point2D& operator*(const Matrix& m1, const point2D& p);
 
 #endif

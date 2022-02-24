@@ -54,12 +54,12 @@ int main()
 	//plotEq2(*pixmap, origin);
 
 
-	std::cout << "Origin: \n" << origin << std::endl;
+	// std::cout << "Origin: \n" << origin << std::endl;
 
 	MoveTo2D(w_min.x, origin.y);
 	DrawTo2D(*pixmap, colors::BLACK, w_max.x, origin.y);
-	//MoveTo2D(origin.x, w_min.y);
-    //DrawTo2D(*pixmap, colors::BLACK, origin.x, w_max.y);
+	MoveTo2D(origin.x, w_min.y);
+    DrawTo2D(*pixmap, colors::BLACK, origin.x, w_max.y);
 	
 
 	std::string filename2( "mytest.pbm" );
