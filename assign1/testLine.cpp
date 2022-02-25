@@ -31,7 +31,7 @@ double eq2(double x)
 }
 
 void drawAxis(Canvas& pixmap, color color, point2D origin, point2D min,  point2D max);
-void plotTest(Canvas& pixmap, point2D origin, point2D min, point2D max);
+void plotTest(Canvas& pixmap, point2D origin);
 void plotEq1(Canvas& pixmap, point2D origin); // equation 1
 void plotEq2(Canvas& pixmap, point2D origin); // equation 2
 
@@ -47,29 +47,19 @@ int main()
 	// point2D v_min(0.0, -1.0)  , v_max(1.0, 0.0);   // Quadrant IV
 	// Can do more! Just left half of axis, right half, top half, bottom half, etc
 
-	const int pixmapSize = 1000;
-	
-	std::shared_ptr<Canvas> pixmap = InitGraphics(pixmapSize, w_min, w_max, v_min, v_max);
+	const int width = 1000 , height = 1000;
+	std::shared_ptr<Canvas> pixmap = InitGraphics(width, height, w_min, w_max, v_min, v_max);
 
 	point2D origin( 
 		((w_max.x+w_min.x)/2.0),   // I have messed up these formulas multiple times
 		((w_max.y+w_min.y)/2.0) 
 	);
 
-	point2D min(origin.x - 2.5, origin.y);
-	point2D max(origin.x + 2.5, origin.y + 7.5);
+	ChangeViewport(-1, 0, 0, 1);
 
-	plotTest(*pixmap, origin, min, max);
+	plotTest(*pixmap, origin);
 	//plotEq1(*pixmap, origin);
 	//plotEq2(*pixmap, origin);
-
-	
-
-	// MoveTo2D(w_min.x, origin.y);
-	// DrawTo2D(*pixmap, colors::BLACK, w_max.x, origin.y);
-	// MoveTo2D(origin.x, w_min.y);
-    // DrawTo2D(*pixmap, colors::BLACK, origin.x, w_max.y);
-	
 
 	std::string filename2( "mytest.pbm" );
 	SaveCanvasToFile( *pixmap, filename2 );
@@ -86,8 +76,11 @@ void drawAxis(Canvas& pixmap, color color, point2D origin, point2D min,  point2D
 }
 
 // Test the code from sample plot
-void plotTest(Canvas& pixmap, point2D origin, point2D min,  point2D max)
+void plotTest(Canvas& pixmap, point2D origin)
 {
+	point2D min(origin.x - 2.5, origin.y);
+	point2D max(origin.x + 2.5, origin.y + 7.5);
+
 	drawAxis(pixmap, colors::BLACK, origin, min, max);
 
 	double x = -2.0;

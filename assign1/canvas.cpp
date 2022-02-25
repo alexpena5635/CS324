@@ -120,16 +120,12 @@ static double sy;
 // InitGraphics()
 // - sets the window, viewport, and cavas up
 // - return the canvas
-std::shared_ptr<Canvas> InitGraphics(const int size, const point2D w_min, const point2D w_max, const point2D v_min, const point2D v_max)
+std::shared_ptr<Canvas> InitGraphics(const int w, const int h, const point2D w_min_l, const point2D w_max_l, const point2D v_min_l, const point2D v_max_l)
 {
-	SetWindow(w_min.x, w_min.y, w_max.x, w_max.y);
-	SetViewport(v_min.x, v_min.y, v_max.x, v_max.y);
+	ChangeWindow(w_min_l.x, w_min_l.y, w_max_l.x, w_max_l.y);
+	ChangeViewport(v_min_l.x, v_min_l.y, v_max_l.x, v_max_l.y);
 
-	// sx = (v_max.x-v_min.x) / (v_max.x-w_min.x); // Scaling factor should be diff of viewport poitns over diff of window points?
-	sx = (v_max.x - v_min.x) / (w_max.x - w_min.x);
-	sy = (v_max.y - v_min.y) / (w_max.y - w_min.y);
-	
-	std::shared_ptr<Canvas> pixmap (new Canvas(size, size, colors::WHITE));
+	std::shared_ptr<Canvas> pixmap (new Canvas(w, h, colors::WHITE));
 	return pixmap;	
 }
 
@@ -144,7 +140,37 @@ void SetViewport(double x1, double y1, double x2, double y2)
 void SetWindow(double x1, double y1, double x2, double y2)
 {
 	w_min.set(x1, y1, 1);
-    v_max.set(x2, y2, 1);
+    w_max.set(x2, y2, 1); // v_max.set(x2, y2, 1) // didnt even notice this!
+}
+
+void PrintViewport()
+{
+	std::cout << "Viewport min: " << v_min << std::endl;
+	std::cout << "Viewport max: " << v_max << std::endl;
+}
+
+void PrintWindow()
+{
+	std::cout << "Window min: " << w_min << std::endl;
+	std::cout << "Window max: " << w_max << std::endl;
+}
+
+
+void ChangeViewport(double xmin, double ymin, double xmax, double ymax)
+{
+	SetViewport(xmin, ymin, xmax, ymax);
+
+	sx = (xmax - xmin) / (w_max.x - w_min.x);
+	sy = (ymax - ymin) / (w_max.y - w_min.y);
+}
+
+
+void ChangeWindow(double xmin, double ymin, double xmax, double ymax)
+{
+	SetWindow(xmin, ymin, xmax, ymax);
+
+	sx = (v_max.x - v_min.x) / (xmax - xmin);
+	sy = (v_max.y - v_min.y) / (ymax - ymin);
 }
 
 // Convert from window to viewport coords

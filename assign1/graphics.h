@@ -70,16 +70,17 @@ struct point2D {
 
 
 
-std::shared_ptr<Canvas> InitGraphics(const int size, const point2D w_min, const point2D w_max, const point2D v_min, const point2D v_max);
+std::shared_ptr<Canvas> InitGraphics(const int w, const int h, const point2D w_min, const point2D w_max, const point2D v_min, const point2D v_max);
 
 void SetViewport(double x1, double y1, double x2, double y2); // set the viewport "corner" coords (global)
 void SetWindow(double x1, double y1, double x2, double y2);  // set the window "corner" coords (global)
+void PrintViewport();
+void PrintWindow();
+void ChangeViewport(double xmin, double ymin, double xmax, double ymax); 
+void ChangeWindow(double xmin, double ymin, double xmax, double ymax); 
 
 void WindowToViewport(const point2D &in_vector, point2D& out_vector); 
 void ViewportToPixmap(double canvas_w, double canvas_h, const point2D& in_vector, point2D& out_vector);
-
-void translatePoint(point2D &in_vector, point2D& out_vector, double x_tran, double y_tran);
-void scalePoint(point2D &in_vector, point2D& out_vector, double x_scale, double y_scale);
 
 void MoveTo2D(double x, double y); // On the canvas space, where the "pen" is moved to
 void DrawTo2D(Canvas &c, color color, double x, double y); // Go from the current spot to (x,y) an draw line
