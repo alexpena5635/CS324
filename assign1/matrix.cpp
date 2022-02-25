@@ -109,6 +109,8 @@ void Matrix::resetMatrix()
 
 // Operator * overload for two matricies
 // - We assume both are square and of dim*dim size
+// Reference to double check my matrix multiplication
+// - https://www.programiz.com/cpp-programming/examples/matrix-multiplication 
 Matrix& operator*(const Matrix& m1, const Matrix& m2)
 {
     int dim = 3;

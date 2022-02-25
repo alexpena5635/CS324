@@ -7,6 +7,7 @@
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <cmath>
 
 #include "graphics.h"
 #include "matrix.h"
@@ -169,13 +170,68 @@ void WindowToViewport(const point2D& in_vector, point2D& out_vector)
 }
 
 // Convert from the viewport to the pixmap
-void ViewportToPixmap(double canvas_size, const point2D& in_vector, point2D& out_vector)
+void ViewportToPixmap(double canvas_w, double canvas_h, const point2D& in_vector, point2D& out_vector)
 {
-	double scaleX = canvas_size / (v_max.x-v_min.x);
-    double scaleY = canvas_size / (v_max.y-v_min.y);
+
+	// double canvasMinX = (fabs(v_max.x)-fabs(v_min.x)) * (canvas_size/2);
+	// double canvasMinY = (fabs(v_max.y)-fabs(v_min.y)) * (canvas_size/2);
+	// double canvasMaxX = canvas_size*v_max.x;
+	// double canvasMaxY = canvas_size*v_max.y;
+
+	// double scaleX = (canvasMaxX-canvasMinX) / (v_max.x-v_min.x);
+    // double scaleY = (canvasMaxY-canvasMinY) / (v_max.y-v_min.y);
+
+	// double canvasMinX = canvas_w/2 + (canvas_w/2)*v_min.x;
+	// double canvasMinY = canvas_h/2 + (canvas_h/2)*v_min.y;
+	// double canvasMaxX = canvas_w/2 + (canvas_w/2)*v_max.x;
+	// double canvasMaxY = canvas_h/2 + (canvas_h/2)*v_max.y;
+
+	double canvasMinX = (canvas_w/2) * (1 + v_min.x);
+	double canvasMinY = (canvas_h/2) * (1 + v_min.y);
+	double canvasMaxX = (canvas_w/2) * (1 + v_max.x);
+	double canvasMaxY = (canvas_h/2) * (1 + v_max.y);
+
+	double scaleX = (canvasMaxX-canvasMinX) / (v_max.x-v_min.x);
+    double scaleY = (canvasMaxY-canvasMinY) / (v_max.y-v_min.y);
+
+	// std::cout << "scaleX: " << scaleX << std::endl;
+	// std::cout << "scaleY: " << scaleY << std::endl;
+	// //std::cout << "scaleX = (" << canvasMaxX << " - " << canvasMinX << ") / (" << v_max.x << " - " << v_min.x << ")" << std::endl;
+
+	// std::cout << "canvasMinX: " << canvasMinX << " canvasMinY: " << canvasMinY << std::endl;
+	// std::cout << "canvasMaxX: " << canvasMaxX << " canvasMaxY: " << canvasMaxY << std::endl;
+
+	// right now 1-to-1
+
+	// want 
+	// * -1,-1 0,0 ----> bottom left corner
+	// * 0,0, 1,1, ----> top right corner
+
+	// =====> x = 0  ===> canvas_size/2
+	// =====> y = 0  ===> canvas_size/2
+	// =====> x = 1  ===> canvas_size
+	// =====> y = 1  ===> canvas_size
+	// =====> x = -1 ===> 0
+	// =====> y = -1 ===> 0
+
+
+	// v_min.x == -1, v_max.x == 1;
+	// * sx = (canvas_size*v_max.x - (fabs(v_max.x)-fabs(v_min.x)) * canvas/2) /  (v_max.x-v_min.x)
+
+	
+	// v_min.x == 0, v_max.x == 1 ;
+	// * sx = (canvas_size*v_max.x - (fabs(v_max.x)-fabs(v_min.x)) * canvas/2) /  (v_max.x-v_min.x)
+
+	// v_min.x == -1, v_max.x == 0;
+	// * sx = (canvas_size*v_max.x - (fabs(v_max.x)-fabs(v_min.x)) * canvas/2) /  (v_max.x-v_min.x)
+	// * sx = (0 - (0-1) * canvas/2)
+	// * sx = (0 - (-1)*canvs/2)
+	// * sx = 0 - (-canvas/2)
+	// * sx = 0 + canvas/2
+	// * sx = canvas/2
 
 	// Multiply 2D point vector by 3D translation matrix of the min viewport point
-	Matrix t1(DIM, translation, 0, 0); //smallest spot on cavas is always 0,0	
+	Matrix t1(DIM, translation, canvasMinX, canvasMinY); //smallest spot on bitmap is bitmapMinX, bitmapMInY	
 	Matrix s(DIM, scaling, 0, 0, scaleX, scaleY);
 	Matrix t2(DIM, translation, -v_min.x, -v_min.y);
 
@@ -189,7 +245,7 @@ void ViewportToPixmap(double canvas_size, const point2D& in_vector, point2D& out
 	s.deallocate();
 
 	// Filp the y-axis 
-	out_vector.y = canvas_size - out_vector.y;
+	out_vector.y = canvas_h - out_vector.y;
 }
 
 
@@ -208,19 +264,19 @@ void DrawTo2D(Canvas &c, color color, double x, double y)
 	point2D window_curr(currentPos.x, currentPos.y, currentPos.h), window_goal(x, y, 1);
 	point2D new_curr, new_goal;
 
-	std::cout << "##### Window points #####\n" << window_curr << window_goal;
+	//std::cout << "##### Window points #####\n" << window_curr << window_goal;
 
 	// Translate the start and end coodinates from world space to viewport
 	WindowToViewport(window_curr, new_curr); 
 	WindowToViewport(window_goal, new_goal); 
 
-	std::cout << "##### Viewport points #####\n" << new_curr << new_goal;
+	//std::cout << "##### Viewport points #####\n" << new_curr << new_goal;
 
 	// Viewport to canvas space/coords
-	ViewportToPixmap(c.Width(), new_curr, new_curr); 
-	ViewportToPixmap(c.Width(), new_goal, new_goal);
+	ViewportToPixmap(c.Width(), c.Height(), new_curr, new_curr); 
+	ViewportToPixmap(c.Width(), c.Height(), new_goal, new_goal);
 
-	std::cout << "##### Pixmap points #####\n" << new_curr << new_goal;
+	//std::cout << "##### Pixmap points #####\n" << new_curr << new_goal;
 	
 	// Scales to match vp and window, like a fullscreen drawing
 	Line(c, new_curr.x, new_curr.y, new_goal.x, new_goal.y, color);	
