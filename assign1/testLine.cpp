@@ -34,6 +34,7 @@ void drawAxis(Canvas& pixmap, color color, point2D origin, point2D min,  point2D
 void plotTest(Canvas& pixmap, point2D origin);
 void plotEq1(Canvas& pixmap, point2D origin); // equation 1
 void plotEq2(Canvas& pixmap, point2D origin); // equation 2
+void plotEq3(Canvas& pixmap, point2D origin); // equation 2
 
 int main()
 {	
@@ -47,18 +48,18 @@ int main()
 	const int width = 1000 , height = 1000;
 	std::shared_ptr<Canvas> pixmap = InitGraphics(width, height);
 
-	ChangeWindow(-10,-10, 10, 10);
-	point2D origin;
+	point2D origin(0, 0);
 
-	ChangeViewport(-1, -1, 0, 0);
-	GetOrigin(origin);
-	plotTest(*pixmap, origin);
+	// ChangeViewport(-1, -1, 0, 0);
+	// plotTest(*pixmap, origin);
 
-	ChangeViewport(0, 0, 1, 1);
-	GetOrigin(origin);
-	plotTest(*pixmap, origin);
-	//plotEq1(*pixmap, origin);
-	//plotEq2(*pixmap, origin);
+	// ChangeWindow(-2, -4, 12, 6);
+	// ChangeViewport(-1, -1, 1, 1);
+	// plotEq1(*pixmap, origin);
+
+	// ChangeWindow(-6, -30, 6, 30);
+	// ChangeViewport(-1, -1, 1, 1);
+	// plotEq2(*pixmap, origin);
 
 	std::string filename2( "mytest.pbm" );
 	SaveCanvasToFile( *pixmap, filename2 );
@@ -116,8 +117,8 @@ void plotEq1(Canvas& pixmap, point2D origin)
 // Draw the second equation
 void plotEq2(Canvas& pixmap, point2D origin)
 {
-	point2D min(-15, -15);
-	point2D max(15, 15);
+	point2D min(-10, -30);
+	point2D max(10, 30);
 
 	drawAxis(pixmap, colors::BLACK, origin, min, max);
 
@@ -127,7 +128,32 @@ void plotEq2(Canvas& pixmap, point2D origin)
 	MoveTo2D(x, y);
 	for(x = -6.0; x <= 6.0; x += xInc)
 	{
-		if(fabs(fabs(x) - 2.0) < 0.5)
+		if(fabs(fabs(x) - 2.0) < 0.000001)
+		{
+			x += 0.05;
+			MoveTo2D(x, eq2(x));
+		}
+		DrawTo2D(pixmap, colors::BLUE, x, eq2(x));
+		MoveTo2D(x, eq2(x));
+	}
+	
+}
+
+// Draw the third equation
+void plotEq3(Canvas& pixmap, point2D origin)
+{
+	point2D min(-10, -10);
+	point2D max(10, 10);
+
+	drawAxis(pixmap, colors::BLACK, origin, min, max);
+
+	double x = -6;
+	double xInc = 1.0 / 1000.0;
+	double y = eq2(x);
+	MoveTo2D(x, y);
+	for(x = -6.0; x <= 6.0; x += xInc)
+	{
+		if(fabs(fabs(x) - 2.0) < 0.000001)
 		{
 			x += 0.05;
 			MoveTo2D(x, eq2(x));

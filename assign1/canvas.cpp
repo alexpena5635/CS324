@@ -110,8 +110,6 @@ void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName )
 static point2D w_min(-10, -10), w_max(10,10);
 static point2D v_min(-1, -1), v_max(1, 1);
 
-static point2D w_origin;
-
 // Current position from "move" is set here"
 static point2D currentPos;
 
@@ -152,12 +150,10 @@ void SetWindow(double x1, double y1, double x2, double y2)
 
 void GetOrigin(point2D& p)
 {
-	p.set(w_origin.x, w_origin.y);
-}
-
-void SetOrigin(double x, double y)
-{
-	w_origin.set(x, y, 1);
+	p.set(
+		(w_max.x+w_min.x)/2, 
+		(w_max.y+w_min.y)/2
+	);
 }
 
 void PrintViewport()
@@ -176,7 +172,6 @@ void PrintWindow()
 void ChangeViewport(double xmin, double ymin, double xmax, double ymax)
 {
 	SetViewport(xmin, ymin, xmax, ymax);
-	SetOrigin( (xmax+xmin)/2, (ymax+ymin)/2 ); // Anytime we change the window, by default set the origin to the middle of the window
 
 	sx = (xmax - xmin) / (w_max.x - w_min.x);
 	sy = (ymax - ymin) / (w_max.y - w_min.y);
