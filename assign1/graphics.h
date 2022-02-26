@@ -77,7 +77,6 @@ std::shared_ptr<Canvas> InitGraphics(	const int w, const int h,
 
 void SetViewport(double x1, double y1, double x2, double y2); // set the viewport "corner" coords (global)
 void SetWindow(double x1, double y1, double x2, double y2);  // set the window "corner" coords (global)
-void SetOrigin(double x, double y);
 void GetOrigin(point2D& p);
 void PrintViewport();
 void PrintWindow();

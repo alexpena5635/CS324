@@ -11,12 +11,6 @@ c++ -std=c++14 testLine.cpp canvas.cpp
 
  */
 
-
-/*
-	- Functions to draw equation 1 and 2 are defined here
-	- It got hectic towards the end so this file is a mess in terms of what it's calling currently
-*/
-
 #include <iostream>
 #include <cmath>
 
@@ -43,13 +37,6 @@ void plotEq3(Canvas& pixmap, point2D origin); // equation 2
 
 int main()
 {	
-	// point2D v_min(-1.0, -1.0) , v_max(1.0, 1.0);   // full screen
-	// point2D v_min(0.0, 0.0)   , v_max(1.0, 1.0);   // Quadrant I 
-	// point2D v_min(-1.0, 0.0)  , v_max(0.0, 1.0);	  // Quadrant II
-	// point2D v_min(-1.0, -1.0) , v_max(0.0, 0.0);	  // Quadrant III
-	// point2D v_min(0.0, -1.0)  , v_max(1.0, 0.0);   // Quadrant IV
-	// Can do more! Just left half of axis, right half, top half, bottom half, etc
-
 	const int width = 1000 , height = 1000;
 	std::shared_ptr<Canvas> pixmap = InitGraphics(width, height);
 

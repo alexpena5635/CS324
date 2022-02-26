@@ -33,7 +33,8 @@ Matrix::Matrix(int ndim, matrixtype type/*=custom*/, double tx, double ty, doubl
     };
 }
 
-// Matrix::~Matrix()
+// Issues using the destructor bc since it is dynamically allocated it never goes out of scope or gets called
+// Matrix::~Matrix() 
 // {
 //     // Deallocate the array representing the matrix
 //     for (int i = 0; i < dim; ++i) {
