@@ -37,9 +37,6 @@ void plotEq2(Canvas& pixmap, point2D origin); // equation 2
 
 int main()
 {	
-	point2D w_min(-10.0, -10.0) , w_max(10.0, 10.0);
-	point2D v_min(-1.0, -1.0) , v_max(1.0, 1.0);
-
 	// point2D v_min(-1.0, -1.0) , v_max(1.0, 1.0);   // full screen
 	// point2D v_min(0.0, 0.0)   , v_max(1.0, 1.0);   // Quadrant I 
 	// point2D v_min(-1.0, 0.0)  , v_max(0.0, 1.0);	  // Quadrant II
@@ -48,15 +45,17 @@ int main()
 	// Can do more! Just left half of axis, right half, top half, bottom half, etc
 
 	const int width = 1000 , height = 1000;
-	std::shared_ptr<Canvas> pixmap = InitGraphics(width, height, w_min, w_max, v_min, v_max);
+	std::shared_ptr<Canvas> pixmap = InitGraphics(width, height);
 
-	point2D origin( 
-		((w_max.x+w_min.x)/2.0),   // I have messed up these formulas multiple times
-		((w_max.y+w_min.y)/2.0) 
-	);
+	ChangeWindow(-10,-10, 10, 10);
+	point2D origin;
 
-	ChangeViewport(-1, 0, 0, 1);
+	ChangeViewport(-1, -1, 0, 0);
+	GetOrigin(origin);
+	plotTest(*pixmap, origin);
 
+	ChangeViewport(0, 0, 1, 1);
+	GetOrigin(origin);
 	plotTest(*pixmap, origin);
 	//plotEq1(*pixmap, origin);
 	//plotEq2(*pixmap, origin);

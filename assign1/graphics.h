@@ -70,10 +70,15 @@ struct point2D {
 
 
 
-std::shared_ptr<Canvas> InitGraphics(const int w, const int h, const point2D w_min, const point2D w_max, const point2D v_min, const point2D v_max);
+std::shared_ptr<Canvas> InitGraphics(	const int w, const int h, 
+										const double wxmin = -10, const double wymin = -10, const double wxmax = 10, const double wymax = 10, 
+										const double vxmin = -1, const double vymin = -1, const double vxmax = 1, const double vymax = 1
+);
 
 void SetViewport(double x1, double y1, double x2, double y2); // set the viewport "corner" coords (global)
 void SetWindow(double x1, double y1, double x2, double y2);  // set the window "corner" coords (global)
+void SetOrigin(double x, double y);
+void GetOrigin(point2D& p);
 void PrintViewport();
 void PrintWindow();
 void ChangeViewport(double xmin, double ymin, double xmax, double ymax); 

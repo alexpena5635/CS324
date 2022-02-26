@@ -107,8 +107,10 @@ void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName )
 }
 
 // The corner points of the window and viewport
-static point2D w_min, w_max;
-static point2D v_min, v_max;
+static point2D w_min(-10, -10), w_max(10,10);
+static point2D v_min(-1, -1), v_max(1, 1);
+
+static point2D w_origin;
 
 // Current position from "move" is set here"
 static point2D currentPos;
@@ -120,10 +122,15 @@ static double sy;
 // InitGraphics()
 // - sets the window, viewport, and cavas up
 // - return the canvas
-std::shared_ptr<Canvas> InitGraphics(const int w, const int h, const point2D w_min_l, const point2D w_max_l, const point2D v_min_l, const point2D v_max_l)
+// std::shared_ptr<Canvas> InitGraphics(const int w, const int h, const point2D w_min_l, const point2D w_max_l, const point2D v_min_l, const point2D v_max_l)
+std::shared_ptr<Canvas> InitGraphics(	
+										const int w, const int h, 
+										const double wxmin, const double wymin, const double wxmax, const double wymax, 
+										const double vxmin, const double vymin, const double vxmax, const double vymax 
+									)
 {
-	ChangeWindow(w_min_l.x, w_min_l.y, w_max_l.x, w_max_l.y);
-	ChangeViewport(v_min_l.x, v_min_l.y, v_max_l.x, v_max_l.y);
+	ChangeWindow(wxmin, wymin, wxmax, wymax);
+	ChangeViewport(vxmin, vymin, vxmax, vymax);
 
 	std::shared_ptr<Canvas> pixmap (new Canvas(w, h, colors::WHITE));
 	return pixmap;	
@@ -143,6 +150,16 @@ void SetWindow(double x1, double y1, double x2, double y2)
     w_max.set(x2, y2, 1); // v_max.set(x2, y2, 1) // didnt even notice this!
 }
 
+void GetOrigin(point2D& p)
+{
+	p.set(w_origin.x, w_origin.y);
+}
+
+void SetOrigin(double x, double y)
+{
+	w_origin.set(x, y, 1);
+}
+
 void PrintViewport()
 {
 	std::cout << "Viewport min: " << v_min << std::endl;
@@ -159,6 +176,7 @@ void PrintWindow()
 void ChangeViewport(double xmin, double ymin, double xmax, double ymax)
 {
 	SetViewport(xmin, ymin, xmax, ymax);
+	SetOrigin( (xmax+xmin)/2, (ymax+ymin)/2 ); // Anytime we change the window, by default set the origin to the middle of the window
 
 	sx = (xmax - xmin) / (w_max.x - w_min.x);
 	sy = (ymax - ymin) / (w_max.y - w_min.y);
