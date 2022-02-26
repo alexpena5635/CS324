@@ -29,6 +29,11 @@ double eq2(double x)
 	double den = (x*x) - 3*x -10;
 	return num/den;
 }
+double eq3(double x, double mult, double b)
+{
+	double expre = (x*x)*( (b*x) + 0.5 );
+	return mult * pow(expre, 0.5);
+}
 
 void drawAxis(Canvas& pixmap, color color, point2D origin, point2D min,  point2D max);
 void plotTest(Canvas& pixmap, point2D origin);
@@ -60,6 +65,10 @@ int main()
 	// ChangeWindow(-6, -30, 6, 30);
 	// ChangeViewport(-1, -1, 1, 1);
 	// plotEq2(*pixmap, origin);
+
+	// ChangeWindow(-5, -10, 10, 10);
+	// ChangeViewport(-1, -1, 1, 1);
+	// plotEq3(*pixmap, origin);
 
 	std::string filename2( "mytest.pbm" );
 	SaveCanvasToFile( *pixmap, filename2 );
@@ -147,19 +156,34 @@ void plotEq3(Canvas& pixmap, point2D origin)
 
 	drawAxis(pixmap, colors::BLACK, origin, min, max);
 
-	double x = -6;
+	double x;
 	double xInc = 1.0 / 1000.0;
-	double y = eq2(x);
+
+	// const double b = 0.5;
+	// x = -1;
+
+	// const double b = 1;
+	// x = -0.5;
+
+	const double b = 2;
+	x = -0.25;
+
+	double y = eq3(x, 1, b);
 	MoveTo2D(x, y);
-	for(x = -6.0; x <= 6.0; x += xInc)
+	for(x; x <= 50.0; x += xInc)
 	{
-		if(fabs(fabs(x) - 2.0) < 0.000001)
-		{
-			x += 0.05;
-			MoveTo2D(x, eq2(x));
-		}
-		DrawTo2D(pixmap, colors::BLUE, x, eq2(x));
-		MoveTo2D(x, eq2(x));
+		DrawTo2D(pixmap, colors::BLUE, x, eq3(x, 1, b));
+		MoveTo2D(x, eq3(x, 1, b));
 	}
+
+	x = -0.25;
+	y = eq3(x, -1, b);
+	MoveTo2D(x, y);
+	for(x; x < 50.0; x += xInc)
+	{
+		DrawTo2D(pixmap, colors::BLUE, x, eq3(x, -1, b));
+		MoveTo2D(x, eq3(x, -1, b));
+	}
+	
 	
 }
