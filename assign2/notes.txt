@@ -1,0 +1,26 @@
+Objective: Definiton and development of a completetest case for the simple
+3D Display System.
+
+Requirements: Trace on paper all the operations of the basic
+3D graphics system to draw the 6 faces of a single cube (show all computations)
+
+The cube is to be viewed with the focal point at the upper left corner
+of the cube (0,1,0) and the camera position and orientation (r=25, 0=45, a=0)
+
+1) show all function calls and their parameters
+2) show all matricies that need to be calculated
+
+
+__________________________________________________
+
+- Lectures
+  * 3D transform
+  * Camera transform
+  * Display transform
+
+????????????????????
+1) Get camera transform
+2) Apply to all points
+
+??????????????
+*) can make aT the identity matrix!
