@@ -42,23 +42,36 @@ int main()
 
 	point2D origin(0, 0);
 
-	// ChangeViewport(-1, -1, 0, 0);
-	// plotTest(*pixmap, origin);
+	std::string filename;
 
-	// ChangeWindow(-2, -4, 12, 6);
-	// ChangeViewport(-1, -1, 1, 1);
-	// plotEq1(*pixmap, origin);
+	filename = "plotTest.pbm";
+	ChangeViewport(-1, -1, 0, 0);
+	plotTest(*pixmap, origin);
+	SaveCanvasToFile( *pixmap, filename);
+	pixmap->Clear();
 
-	// ChangeWindow(-6, -30, 6, 30);
-	// ChangeViewport(-1, -1, 1, 1);
-	// plotEq2(*pixmap, origin);
+	filename = "plot1.pbm";
+	ChangeWindow(-2, -4, 12, 6);
+	ChangeViewport(-1, -1, 1, 1);
+	plotEq1(*pixmap, origin);
+	SaveCanvasToFile( *pixmap, filename);
+	pixmap->Clear();
 
-	// ChangeWindow(-5, -10, 10, 10);
-	// ChangeViewport(-1, -1, 1, 1);
-	// plotEq3(*pixmap, origin);
+	filename = "plot2.pbm";
+	ChangeWindow(-6, -30, 6, 30);
+	ChangeViewport(-1, -1, 1, 1);
+	plotEq2(*pixmap, origin);
+	SaveCanvasToFile( *pixmap, filename);
+	pixmap->Clear();
 
-	std::string filename2( "mytest.pbm" );
-	SaveCanvasToFile( *pixmap, filename2 );
+	filename = "plot3.pbm";
+	ChangeWindow(-5, -10, 10, 10);
+	ChangeViewport(-1, -1, 1, 1);
+	plotEq3(*pixmap, origin);
+	SaveCanvasToFile( *pixmap, filename);
+
+	// std::string filename( "mytest.pbm" );
+	// SaveCanvasToFile( *pixmap, filename);
     return 0;
 }
 
