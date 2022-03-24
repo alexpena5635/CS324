@@ -68,6 +68,21 @@ struct point2D {
 	}
 };
 
+// 3D Point struct, with constructor, set function, and print
+struct point3D {
+    double x;
+	double y;
+	double z;
+	double h; // homog
+	point3D() { x=0.0; y=0.0; z=0.0; h=0.0;}
+	point3D(double x1, double y1, double z1, double h1=1) {x=x1; y=y1; z=z1; h=h1;}
+	void set(double x1, double y1, double z1, double h1=1) {x=x1; y=y1; z=z1; h=h1;}
+
+	friend std::ostream& operator<<(std::ostream& os, const point3D& p){
+		return os << "Point\n - x: " << p.x << "\n - y: " << p.y << "\n - z: " << p.z << "\n - h: " << p.h << std::endl;
+	}
+};
+
 
 
 std::shared_ptr<Canvas> InitGraphics(	const int w, const int h, 

@@ -198,9 +198,26 @@ void WindowToViewport(const point2D& in_vector, point2D& out_vector)
 	Matrix s(DIM, scaling, 0, 0, sx, sy);
 	Matrix t2(DIM, translation, -w_min.x, -w_min.y);
 
+	std::cout << "Transform 1: \n";
+	t1.print();
+	std::cout << "Scaling: \n";
+	s.print();
+	std::cout << "Transform 2: \n";
+	t2.print();
+
+	Matrix res1 = t1*s;
+	std::cout << "PreRes: \n";
+	res1.print();
+
 	Matrix result = t1*s*t2;
 
+	std::cout << "Result: \n";
+	result.print(); 
+
 	out_vector = result * in_vector;
+
+	std::cout << "Window Point: " << in_vector << std::endl;
+	std::cout << "Viewport Point: " << out_vector << std::endl;
 
 	// The point is now translated into viewport
 	t1.deallocate();
@@ -273,8 +290,22 @@ void ViewportToPixmap(double canvas_w, double canvas_h, const point2D& in_vector
 	Matrix t1(DIM, translation, canvasMinX, canvasMinY); //smallest spot on bitmap is bitmapMinX, bitmapMInY	
 	Matrix s(DIM, scaling, 0, 0, scaleX, scaleY);
 	Matrix t2(DIM, translation, -v_min.x, -v_min.y);
+	std::cout << "************************ PIXMAP **************************" << std::endl;
+	std::cout << "Transform 1: \n";
+	t1.print();
+	std::cout << "Scaling: \n";
+	s.print();
+	std::cout << "Transform 2: \n";
+	t2.print();
+
+	Matrix res1 = t1*s;
+	std::cout << "PreRes: \n";
+	res1.print();
 
 	Matrix result = t1*s*t2;
+
+	std::cout << "Result: \n";
+	result.print(); 
 
 	out_vector = result * in_vector;
 
@@ -285,6 +316,9 @@ void ViewportToPixmap(double canvas_w, double canvas_h, const point2D& in_vector
 
 	// Filp the y-axis 
 	out_vector.y = canvas_h - out_vector.y;
+
+	std::cout << "Viewport Point: " << in_vector << std::endl;
+	std::cout << "Pixmap Point: " << out_vector << std::endl;
 }
 
 

@@ -18,6 +18,9 @@ Matrix::Matrix(int ndim, matrixtype type/*=custom*/, double tx, double ty, doubl
         case custom:
             resetMatrix();
             break;
+        case identity:
+            setIdentityMatrix();
+            break;
         case translation:
             setTranslationMatrix2D(tx, ty);
             break;
@@ -152,6 +155,29 @@ point2D& operator*(const Matrix& m1, const point2D& p)
 
     point2D *p2 = new point2D;
     p2->set(newPoint[0], newPoint[1], newPoint[2]);
+    return *p2;
+}
+
+// Operator * overload for a matrix and a point (3d matrix against a 3d point, and so on)
+// - We assume matrix has same amount of cols as vector does rows
+point3D& operator*(const Matrix& m1, const point3D& p)
+{
+    int dim = 4;
+
+    double newPoint[dim] = {};
+	double inPoint[dim] = {p.x, p.y, p.z, p.h};
+
+    for(int i = 0; i < dim; i++)
+    {
+        for (int j = 0; j < dim; j++)
+        {
+            newPoint[i] += m1.m[i][j] * inPoint[j];
+            // std::cout << "newPoint[" << j << "] " << newPoint[j] << std::endl;
+        }
+    }
+
+    point3D *p2 = new point3D;
+    p2->set(newPoint[0], newPoint[1], newPoint[2], newPoint[3]);
     return *p2;
 }
 

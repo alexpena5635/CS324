@@ -5,7 +5,7 @@
 
 #include "graphics.h"
 
-enum matrixtype {custom, translation, rotation, scaling};
+enum matrixtype {custom, identity, translation, rotation, scaling};
 
 // Only square matricies for now
 class Matrix{
@@ -14,6 +14,7 @@ class Matrix{
         //~Matrix();
         void print();
         void deallocate();
+        void setIdentityMatrix();
 
 
         double **m;
@@ -23,7 +24,7 @@ class Matrix{
 
         void setTranslationMatrix2D(double tx, double ty);
         void setScalingMatrix2D(double sx, double sy);
-        void setIdentityMatrix();
+        // void setIdentityMatrix();
         void resetMatrix();
 };
 
