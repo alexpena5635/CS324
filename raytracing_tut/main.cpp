@@ -11,25 +11,19 @@
 #include <iostream>
 #include <fstream>
 
-#include "vec3.h"
+#include "rtweekend.h"
+
 #include "color.h"
-#include "ray.h"
+#include "hittable_list.h"
+#include "sphere.h"
 
-bool hit_sphere(const Point3& center, double radius, const Ray& r) {
-    Vec3 oc = r.origin() - center;
-    auto a = dot(r.direction(), r.direction());
-    auto b = 2.0 * dot(oc, r.direction());
-    auto c = dot(oc, oc) - radius*radius;
-    auto discriminant = b*b - 4*a*c;
-    return (discriminant > 0);
-}
-
-Color ray_color(const Ray& r) {
-    if (hit_sphere(Point3(0,0,-1), 0.5, r))
-        return Color(1, 0, 0);
+Color ray_color(const Ray& r, const Hittable& world) {
+    hit_record rec;
+    if(world.hit(r, 0, infinity, rec)) {
+        return 0.5 * (rec.normal + Color(1,1,1));
+    }
     Vec3 unit_dir = unit_vector(r.direction());
     auto t = 0.5*(unit_dir.y() + 1.0);
-
     return (1.0-t)*Color(1.0,1.0,1.0) + t*Color(0.5, 0.7, 1.0);
 }
 
@@ -39,6 +33,11 @@ int main()
     const auto ASPECT_RATIO = 16.0 / 9.0;
     const int IMAGE_WIDTH = 600;
     const int IMAGE_HEIGHT = static_cast<int>(IMAGE_WIDTH / ASPECT_RATIO);
+
+    // World
+    Hittable_List world;
+    world.add(make_shared<Sphere>(Point3(0,0,-1), 0.5));
+    world.add(make_shared<Sphere>(Point3(0,-100.5,-1), 100));
 
     // Camera
 
@@ -62,20 +61,10 @@ int main()
         std::cout << "\rScanlines remaining: " << j << ' ' << std::flush;
         for (int i = 0; i < IMAGE_WIDTH; ++i)
         {
-            // auto r = double(i)/(IMAGE_WIDTH-1);
-            // auto g = double(j)/(IMAGE_HEIGHT-1);
-            // auto b = 0.25;
-
-            // int ir = static_cast<int>(255.999 * r);
-            // int ig = static_cast<int>(255.999 * g);
-            // int ib = static_cast<int>(255.999 * b);
-
-            // savefile << ir << ' ' << ig << ' ' << ib << '\n';
-            // Color pixel_color(double(i)/(IMAGE_WIDTH-1), double(j)/(IMAGE_HEIGHT-1), 0.25);
             auto u = double(i) / (IMAGE_WIDTH-1);
             auto v = double(j) / (IMAGE_HEIGHT-1);
             Ray r(origin, lower_left_corner + u*horizontal + v*vertical - origin);
-            Color pixel_color = ray_color(r);
+            Color pixel_color = ray_color(r, world);
             write_color(savefile, pixel_color);
         }
     }

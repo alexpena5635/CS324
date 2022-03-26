@@ -6,7 +6,7 @@
 */
 
 #ifndef RAY_H_
-#define RAYH_
+#define RAY_H_
 
 #include "vec3.h"
 
