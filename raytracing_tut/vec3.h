@@ -63,6 +63,12 @@ class Vec3 {
         inline static Vec3 random(double min, double max) {
             return Vec3(random_double(min,max), random_double(min,max), random_double(min,max));
         }
+
+        bool near_zero() const {
+            // Return true if vefctor is close to zero in all dimensions.
+            const auto s = 1e-8;
+            return (fabs(e[0]) < s) && (fabs(e[1]) < s) && (fabs(e[2]) < s);
+        }
 };
 
 // Type aliases
@@ -133,6 +139,10 @@ inline Vec3 random_in_hemisphere(const Vec3& normal) {
         return in_unit_sphere;
     else
         return -in_unit_sphere;
+}
+
+inline Vec3 reflect(const Vec3& v, const Vec3& n) {
+    return v - 2*dot(v,n)*n;
 }
 
 #endif
