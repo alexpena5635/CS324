@@ -49,6 +49,9 @@ int main()
     const int max_depth = 50;
 
     // World
+
+    auto R = cos(pi/4);
+
     Hittable_List world;
 
     auto material_ground = make_shared<Lambertian>(Color(0.8, 0.8, 0.0));
@@ -59,11 +62,12 @@ int main()
     world.add(make_shared<Sphere>(Point3( 0.0, -100.5, -1.0), 100.0, material_ground));
     world.add(make_shared<Sphere>(Point3( 0.0,    0.0, -1.0),   0.5, material_center));
     world.add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0),   0.5, material_left));
-    world.add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0),  -0.4, material_left));
+    world.add(make_shared<Sphere>(Point3(-1.0,    0.0, -1.0), -0.45, material_left));
     world.add(make_shared<Sphere>(Point3( 1.0,    0.0, -1.0),   0.5, material_right));
 
+
     // Camera
-    Camera cam;
+    Camera cam(Point3(-2,2,1), Point3(0,0,-1), Vec3(0,1,0), 25.0, ASPECT_RATIO);
 
     // Render
 
