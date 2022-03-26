@@ -18,11 +18,18 @@
 #include "sphere.h"
 #include "camera.h"
 
-Color ray_color(const Ray& r, const Hittable& world) {
+Color ray_color(const Ray& r, const Hittable& world, int depth) {
     hit_record rec;
-    if(world.hit(r, 0, infinity, rec)) {
-        return 0.5 * (rec.normal + Color(1,1,1));
+
+    if (depth <= 0)
+        return Color(0,0,0);
+
+    if(world.hit(r, 0.001, infinity, rec)) {
+        Point3 target = rec.p + rec.normal + random_unit_vector();
+        // Point3 target = rec.p + random_in_hemisphere(rec.normal); // Alt. diffuse method!
+        return 0.5 * ray_color(Ray(rec.p, target-rec.p), world, depth-1);
     }
+
     Vec3 unit_dir = unit_vector(r.direction());
     auto t = 0.5*(unit_dir.y() + 1.0);
     return (1.0-t)*Color(1.0,1.0,1.0) + t*Color(0.5, 0.7, 1.0);
@@ -32,9 +39,10 @@ int main()
 {
     // Image
     const auto ASPECT_RATIO = 16.0 / 9.0;
-    const int IMAGE_WIDTH = 600;
+    const int IMAGE_WIDTH = 400;
     const int IMAGE_HEIGHT = static_cast<int>(IMAGE_WIDTH / ASPECT_RATIO);
     const int samples_per_pixel = 100;
+    const int max_depth = 50;
 
     // World
     Hittable_List world;
@@ -61,7 +69,7 @@ int main()
                 auto u = (i + random_double()) / (IMAGE_WIDTH-1);
                 auto v = (j + random_double()) / (IMAGE_HEIGHT-1);
                 Ray r = cam.get_ray(u, v);
-                pixel_color += ray_color(r, world);
+                pixel_color += ray_color(r, world, max_depth);
             }
 
             write_color(savefile, pixel_color, samples_per_pixel);
