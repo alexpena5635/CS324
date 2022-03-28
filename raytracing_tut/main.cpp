@@ -75,6 +75,9 @@ int main()
         for (int i = 0; i < image_width; ++i)
         {
             Color pixel_color(0,0,0);
+            
+            // Parrallel processing!!! suck off bing bat!
+            #pragma omp parallel for
             for(int s = 0; s < samples_per_pixel; ++s)
             {
                 auto u = (i + random_double()) / (image_width-1);
