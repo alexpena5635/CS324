@@ -1,11 +1,20 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+/*
+*   camera.h
+*
+*   Defines the camera used in any given scene.
+*
+*   Alex Pena
+*   Modified from : Ray Tracing In One Weekend
+*/
+
+#ifndef CAMERA_H_
+#define CAMERA_H_
 
 #include "rtweekend.h"
 
 class Camera {
     private:
-        Point3 origin;
+        Point3 origin; // The 3D point which the camera will be "looking from"
         Point3 lower_left_corner;
         Vec3   horizontal;
         Vec3   vertical;
