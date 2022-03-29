@@ -3,107 +3,65 @@
 #ifndef _GRAPHICS_H_
 #define _GRAPHICS_H_
 
-#include <vector>
 #include <memory>
-#include <iostream>
+#include <string>
 
-struct color {
-    uint8_t red;
-    uint8_t green;
-    uint8_t blue;
-};
+#include "canvas.h"
+#include "vec2.h"
+#include "vec3.h"
 
-namespace colors {
-	constexpr color BLACK{   0,   0,   0 };
-	constexpr color WHITE{ 255, 255, 255 };
-	constexpr color RED{   255,   0,   0 };
-	constexpr color GREEN{   0, 255,   0 };
-	constexpr color BLUE{    0,   0, 255 };
-}
+class GraphicsSystem {
+	protected:
+		std::shared_ptr<Canvas> pixmap;
+		Point2 w_min, w_max, v_min, v_max;
+		double scale_x, scale_y;
+		Point2 current_pos;
 
-struct pixel {
-    color c;
-};
-
-// This just represents the device or the pix/bit map
-class Canvas {
 	public:
-    	Canvas( std::size_t w, std::size_t h, color background = colors::WHITE );
+		GraphicsSystem() {}
+		GraphicsSystem(std::shared_ptr<Canvas> c) : pixmap(c) {}
 
-    	void SetColor( std::size_t x, std::size_t y, color c );
-    
-    	pixel GetPixel( std::size_t x, std::size_t y ) const;
-   		void SetPixel(  std::size_t x, std::size_t y, pixel c );
-    
-    	void Clear();
+		void saveCanvas(std::string filename) { SaveCanvasToFile(*pixmap, filename); }
+		
+		void initGraphics(	
+			const int w, const int h, 
+			const double wxmin = -10, const double wymin = -10, const double wxmax = 10, const double wymax = 10, 
+			const double vxmin = -1, const double vymin = -1, const double vxmax = 1, const double vymax = 1
+		);
 
-    	std::size_t Width()  const { return width; }
-    	std::size_t Height() const { return height; }
+		void setViewport(double x1, double y1, double x2, double y2) { // set the viewport "corner" coords (global)
+			v_min.set(x1, y1);
+			v_max.set(x2, y2);
+		}
 
-	private:
-    	std::size_t width, height;
-    	std::vector<pixel> pixels;
-    	color background;
+		void setWindow(double x1, double y1, double x2, double y2) { // set the window "corner" coords (global)
+			w_min.set(x1, y1);
+			w_max.set(x2, y2);
+		}
+		
+		void printViewport() { 
+			std::cout << v_min << ' ' << v_max; 
+		} 
+
+		void printWindow(){ 
+			std::cout << w_min << ' ' << w_max; 
+		} 
+
+		void changeViewport(double xmin, double ymin, double xmax, double ymax); 
+		void changeWindow(double xmin, double ymin, double xmax, double ymax); 
+
+		void windowToViewport(const Point2& in_v, Point2& out_v); 
+		void viewportToPixmap(const Point2& in_v, Point2& out_v); 
+
+		void moveTo2D(double x, double y){ // Setting some global that retains the world position we have "moved to"
+			current_pos.set(x,y);
+		} // On the canvas space, where the "pen" is moved to
+
+
+		void drawTo2D(color color, double x, double y); // Go from the current spot to (x,y) an draw line
+
+
 };
-
-
-
-void Line( Canvas& c, int x1, int y1, int x2, int y2, color color );
-
-void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName );
-
-const int DIM = 3; // 2 for coords, 1 for homog
-
-// 2D Point struct, with constructor, set function, and print
-struct point2D {
-    double x;
-	double y;
-	double h; // homog
-	point2D() { x=0.0; y=0.0; h=0.0;}
-	point2D(double x1, double y1, double h1=1) {x=x1; y=y1; h=h1;}
-	void set(double x1, double y1, double h1=1) {x=x1; y=y1; h=h1;}
-
-	friend std::ostream& operator<<(std::ostream& os, const point2D& p){
-		return os << "Point\n - x: " << p.x << "\n - y: " << p.y << "\n - z: " << p.h << std::endl;
-	}
-};
-
-// 3D Point struct, with constructor, set function, and print
-struct point3D {
-    double x;
-	double y;
-	double z;
-	double h; // homog
-	point3D() { x=0.0; y=0.0; z=0.0; h=0.0;}
-	point3D(double x1, double y1, double z1, double h1=1) {x=x1; y=y1; z=z1; h=h1;}
-	void set(double x1, double y1, double z1, double h1=1) {x=x1; y=y1; z=z1; h=h1;}
-
-	friend std::ostream& operator<<(std::ostream& os, const point3D& p){
-		return os << "Point\n - x: " << p.x << "\n - y: " << p.y << "\n - z: " << p.z << "\n - h: " << p.h << std::endl;
-	}
-};
-
-
-
-std::shared_ptr<Canvas> InitGraphics(	const int w, const int h, 
-										const double wxmin = -10, const double wymin = -10, const double wxmax = 10, const double wymax = 10, 
-										const double vxmin = -1, const double vymin = -1, const double vxmax = 1, const double vymax = 1
-);
-
-void SetViewport(double x1, double y1, double x2, double y2); // set the viewport "corner" coords (global)
-void SetWindow(double x1, double y1, double x2, double y2);  // set the window "corner" coords (global)
-void GetOrigin(point2D& p);
-void PrintViewport();
-void PrintWindow();
-void ChangeViewport(double xmin, double ymin, double xmax, double ymax); 
-void ChangeWindow(double xmin, double ymin, double xmax, double ymax); 
-
-void WindowToViewport(const point2D &in_vector, point2D& out_vector); 
-void ViewportToPixmap(double canvas_w, double canvas_h, const point2D& in_vector, point2D& out_vector);
-
-void MoveTo2D(double x, double y); // On the canvas space, where the "pen" is moved to
-void DrawTo2D(Canvas &c, color color, double x, double y); // Go from the current spot to (x,y) an draw line
-
 
 #endif
 

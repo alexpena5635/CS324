@@ -137,12 +137,12 @@ Matrix& operator*(const Matrix& m1, const Matrix& m2)
 
 // Operator * overload for a matrix and a point (2d matrix against a 2d point, and so on)
 // - We assume matrix has same amount of cols as vector does rows
-point2D& operator*(const Matrix& m1, const point2D& p)
+Point2& operator*(const Matrix& m1, const Point2& p)
 {
-    int dim = 3;
+    const int dim = 3;
 
     double newPoint[dim] = {};
-	double inPoint[dim] = {p.x, p.y, p.h};
+	double inPoint[dim] = {p.x(), p.y(), p.h()};
 
     for(int i = 0; i < dim; i++)
     {
@@ -153,19 +153,19 @@ point2D& operator*(const Matrix& m1, const point2D& p)
         }
     }
 
-    point2D *p2 = new point2D;
+    Point2 *p2 = new Point2;
     p2->set(newPoint[0], newPoint[1], newPoint[2]);
     return *p2;
 }
 
 // Operator * overload for a matrix and a point (3d matrix against a 3d point, and so on)
 // - We assume matrix has same amount of cols as vector does rows
-point3D& operator*(const Matrix& m1, const point3D& p)
+Point3& operator*(const Matrix& m1, const Point3& p)
 {
-    int dim = 4;
+    const int dim = 4;
 
     double newPoint[dim] = {};
-	double inPoint[dim] = {p.x, p.y, p.z, p.h};
+	double inPoint[dim] = {p.x(), p.y(), p.z(), p.h()};
 
     for(int i = 0; i < dim; i++)
     {
@@ -176,7 +176,7 @@ point3D& operator*(const Matrix& m1, const point3D& p)
         }
     }
 
-    point3D *p2 = new point3D;
+    Point3 *p2 = new Point3;
     p2->set(newPoint[0], newPoint[1], newPoint[2], newPoint[3]);
     return *p2;
 }

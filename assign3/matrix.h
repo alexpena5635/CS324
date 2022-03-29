@@ -16,19 +16,18 @@ class Matrix{
         void deallocate();
         void setIdentityMatrix();
 
-
         double **m;
     private:
         int dim; // What graphics-related dimension it supports 
 
-
         void setTranslationMatrix2D(double tx, double ty);
         void setScalingMatrix2D(double sx, double sy);
         // void setIdentityMatrix();
+        
         void resetMatrix();
 };
 
 Matrix& operator*(const Matrix& m1, const Matrix& m2);
-point2D& operator*(const Matrix& m1, const point2D& p);
+Point2& operator*(const Matrix& m1, const Point2& p);
 
 #endif
