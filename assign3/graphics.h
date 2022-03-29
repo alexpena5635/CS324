@@ -22,6 +22,7 @@ class GraphicsSystem {
 		GraphicsSystem(std::shared_ptr<Canvas> c) : pixmap(c) {}
 
 		void saveCanvas(std::string filename) { SaveCanvasToFile(*pixmap, filename); }
+		void clearCanvas() {pixmap->Clear();}
 		
 		void initGraphics(	
 			const int w, const int h, 

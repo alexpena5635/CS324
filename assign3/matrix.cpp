@@ -154,7 +154,7 @@ Point2& operator*(const Matrix& m1, const Point2& p)
     }
 
     Point2 *p2 = new Point2;
-    p2->set(newPoint[0], newPoint[1], newPoint[2]);
+    p2->set(newPoint[0], newPoint[1], newPoint[2], true);
     return *p2;
 }
 
@@ -189,7 +189,7 @@ int main()
     Matrix sm(3, scaling, 0, 0, .2, .2);
     Matrix tm2(3, translation, 10, 10);
 
-    point2D p(-5, -5);
+    Point2 p(-5, -5);
 
     tm.print();
     std::cout << std::endl;

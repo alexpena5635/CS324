@@ -14,49 +14,35 @@ c++ -std=c++14 testLine.cpp canvas.cpp
 #include <iostream>
 #include <cmath>
 
-#include "graphics.h"
-
+#include "plotGraphics.h"
 
 int main()
 {	
-	GraphicsSystem gs;
+	PlotGS gs;
 	gs.initGraphics(1000, 1000);
-	gs.changeWindow(-10, -10, 10, 10);
-	gs.changeViewport(-1, -1, 1, 1);
-
 	Point2 origin(0, 0);
-	gs.moveTo2D(5, 5);
-	gs.drawTo2D(colors::BLUE, -10, -10);
 
-	gs.saveCanvas("test.pbm");
+	gs.changeViewport(-1, -1, 0, 0);
+	gs.plotTest(origin);
+	gs.saveCanvas("plotTest.pbm");
+	gs.clearCanvas();
 
-	// filename = "plotTest.pbm";
-	// ChangeViewport(-1, -1, 0, 0);
-	// plotTest(*pixmap, origin);
-	// SaveCanvasToFile( *pixmap, filename);
-	// pixmap->Clear();
+	gs.changeWindow(-2, -4, 12, 6);
+	gs.changeViewport(-1, -1, 1, 1);
+	gs.plotEq1(origin);
+	gs.saveCanvas("plot1.pbm");
+	gs.clearCanvas();
 
-	// filename = "plot1.pbm";
-	// ChangeWindow(-2, -4, 12, 6);
-	// ChangeViewport(-1, -1, 1, 1);
-	// plotEq1(*pixmap, origin);
-	// SaveCanvasToFile( *pixmap, filename);
-	// pixmap->Clear();
+	gs.changeWindow(-6, -30, 6, 30);
+	gs.changeViewport(-1, -1, 1, 1);
+	gs.plotEq2(origin);
+	gs.saveCanvas("plot2.pbm");
+	gs.clearCanvas();
 
-	// filename = "plot2.pbm";
-	// ChangeWindow(-6, -30, 6, 30);
-	// ChangeViewport(-1, -1, 1, 1);
-	// plotEq2(*pixmap, origin);
-	// SaveCanvasToFile( *pixmap, filename);
-	// pixmap->Clear();
+	gs.changeWindow(-5, -10, 10, 10);
+	gs.changeViewport(-1, -1, 1, 1);
+	gs.plotEq3(origin);
+	gs.saveCanvas("plot3.pbm");
 
-	// filename = "plot3.pbm";
-	// ChangeWindow(-5, -10, 10, 10);
-	// ChangeViewport(-1, -1, 1, 1);
-	// plotEq3(*pixmap, origin);
-	// SaveCanvasToFile( *pixmap, filename);
-
-	// std::string filename( "mytest.pbm" );
-	// SaveCanvasToFile( *pixmap, filename);
     return 0;
 }

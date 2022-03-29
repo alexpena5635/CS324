@@ -21,8 +21,6 @@ canvas.o: canvas.cpp
 
 matrix.o: matrix.cpp
 	$(CPP) -c $^
-
-
 	
 clean: 
-	rm mytest.pbm graphic $(OBJS)
+	rm graphic $(OBJS)

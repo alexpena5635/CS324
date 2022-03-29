@@ -27,8 +27,8 @@ class Vec3 : public Vec2 {
 
     public:
         // Constructors
-        Vec3() : v{0.0, 0.0, 0.0, 0.0} {homogenous = false;}
-        Vec3(double v0, double v1, double v2, double h=0.0, bool homog=false) : v{v0, v1, v2, h} {homogenous = homog;}
+        Vec3() : v{0.0, 0.0, 0.0, 1} {homogenous = true;}
+        Vec3(double v0, double v1, double v2, double h=1, bool homog=true) : v{v0, v1, v2, h} {homogenous = homog;}
 
         // Getters
         // Inheriting...
@@ -55,7 +55,7 @@ class Vec3 : public Vec2 {
             v[0] += vec.v[0];
             v[1] += vec.v[1];
             v[2] += vec.v[2];
-            v[3] += (homogenous ? vec.v[3] : 0);
+            v[3] += (Homog() ? vec.v[3] : 0);
             return *this;
         }
 
@@ -63,7 +63,7 @@ class Vec3 : public Vec2 {
             v[0] *= t;
             v[1] *= t;
             v[2] *= t;
-            v[3] *= (homogenous ? t : 1);
+            v[3] *= (Homog() ? t : 1);
             return *this;
         }
 
@@ -73,11 +73,12 @@ class Vec3 : public Vec2 {
 
         // Utility member functions / methods
 
-        void set(double x, double y, double z, double h=0.0) {
+        void set(double x, double y, double z, double h=1, bool homog=true) {
             v[0] = x;
             v[1] = y;
             v[2] = z;
             v[3] = h;
+            homogenous = homog;
         }
         // Inheriting...
         /*
@@ -132,7 +133,7 @@ inline double dot(const Vec3 &u, const Vec3 &v) {
     return  u.x() * v.x()
         +   u.y() * v.y()
         +   u.z() * v.z()
-        +   (u.isHomog() ? u.h() * v.h() : 0);
+        +   (u.Homog() ? u.h() * v.h() : 0);
 }
 
 inline Vec3 cross(const Vec3 &u, const Vec3 &v) {

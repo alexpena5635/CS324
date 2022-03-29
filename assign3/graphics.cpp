@@ -58,26 +58,26 @@ void GraphicsSystem::windowToViewport(const Point2& in_v, Point2& out_v)
 	Matrix s(3, scaling, 0, 0, scale_x, scale_y);
 	Matrix t2(3, translation, -w_min.x(), -w_min.y());
 
-	std::cout << "Transform 1: \n";
-	t1.print();
-	std::cout << "Scaling: \n";
-	s.print();
-	std::cout << "Transform 2: \n";
-	t2.print();
+	// std::cout << "Transform 1: \n";
+	// t1.print();
+	// std::cout << "Scaling: \n";
+	// s.print();
+	// std::cout << "Transform 2: \n";
+	// t2.print();
 
 	Matrix res1 = t1*s;
-	std::cout << "PreRes: \n";
-	res1.print();
+	// std::cout << "PreRes: \n";
+	// res1.print();
 
 	Matrix result = t1*s*t2;
 
-	std::cout << "Result: \n";
-	result.print(); 
+	// std::cout << "Result: \n";
+	// result.print(); 
 
 	out_v = result * in_v;
 
-	std::cout << "Window Point: " << in_v << std::endl;
-	std::cout << "Viewport Point: " << out_v << std::endl;
+	// std::cout << "Window Point: " << in_v << std::endl;
+	// std::cout << "Viewport Point: " << out_v << std::endl;
 
 	// The point is now translated into viewport
 	t1.deallocate();
@@ -101,22 +101,22 @@ void GraphicsSystem::viewportToPixmap(const Point2& in_v, Point2& out_v)
 	Matrix s(3, scaling, 0, 0, scaleX, scaleY);
 	Matrix t2(3, translation, -v_min.x(), -v_min.y());
 
-	std::cout << "************************ PIXMAP **************************" << std::endl;
-	std::cout << "Transform 1: \n";
-	t1.print();
-	std::cout << "Scaling: \n";
-	s.print();
-	std::cout << "Transform 2: \n";
-	t2.print();
+	// std::cout << "************************ PIXMAP **************************" << std::endl;
+	// std::cout << "Transform 1: \n";
+	// t1.print();
+	// std::cout << "Scaling: \n";
+	// s.print();
+	// std::cout << "Transform 2: \n";
+	// t2.print();
 
 	Matrix res1 = t1*s;
-	std::cout << "PreRes: \n";
-	res1.print();
+	// std::cout << "PreRes: \n";
+	// res1.print();
 
 	Matrix result = t1*s*t2;
 
-	std::cout << "Result: \n";
-	result.print(); 
+	// std::cout << "Result: \n";
+	// result.print(); 
 
 	out_v = result*in_v;
 
@@ -132,8 +132,8 @@ void GraphicsSystem::viewportToPixmap(const Point2& in_v, Point2& out_v)
 		out_v.h()
 	);
 
-	std::cout << "Viewport Point: " << in_v << std::endl;
-	std::cout << "Pixmap Point: " << out_v << std::endl;
+	// std::cout << "Viewport Point: " << in_v << std::endl;
+	// std::cout << "Pixmap Point: " << out_v << std::endl;
 }
 
 // Draw a line on the canvas
@@ -143,6 +143,11 @@ void GraphicsSystem::drawTo2D(color draw_color, double x, double y)
 	// - Translate viewport coords to canvas/pixmap coordinates	
 	Point2 window_curr(current_pos.x(), current_pos.y(), current_pos.h()), window_goal(x, y, 1);
 	Point2 new_curr, new_goal;
+
+	// window_curr.setHomog(true);
+	// window_goal.setHomog(true);
+	// new_curr.setHomog(true);
+	// new_goal.setHomog(true);
 
 	//std::cout << "##### Window points #####\n" << window_curr << window_goal;
 
@@ -157,6 +162,11 @@ void GraphicsSystem::drawTo2D(color draw_color, double x, double y)
 	viewportToPixmap(new_goal, new_goal);
 
 	//std::cout << "##### Pixmap points #####\n" << new_curr << new_goal;
+
+	// window_curr.setHomog(false);
+	// window_goal.setHomog(false);
+	// new_curr.setHomog(false);
+	// new_goal.setHomog(false);
 	
 	// Scales to match vp and window, like a fullscreen drawing
 	Line(*pixmap, new_curr.x(), new_curr.y(), new_goal.x(), new_goal.y(), draw_color);	

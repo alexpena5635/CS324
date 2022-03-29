@@ -11,6 +11,7 @@
 #ifndef VEC2_H_
 #define VEC2_H_
 
+#include <cmath>
 #include <iostream>
 
 class Vec2 {
@@ -22,8 +23,8 @@ class Vec2 {
 
     public:
         // Constructors
-        Vec2() : v{0.0, 0.0, 0.0} {homogenous = false;}
-        Vec2(double v0, double v1, double h=0.0, bool homog=false) : v{v0, v1, h} {homogenous = homog;}
+        Vec2() : v{0.0, 0.0, 1.0} {homogenous = true;}
+        Vec2(double v0, double v1, double h=1, bool homog=true) : v{v0, v1, h} {homogenous = homog;}
 
         // Getters
         double x() const {return v[0];}
@@ -62,21 +63,23 @@ class Vec2 {
 
         // Utility member functions / methods
 
-        void set(double x, double y, double h=0.0) {
+        void set(double x, double y, double h=1, bool homog=true) {
             v[0] = x;
             v[1] = y;
             v[2] = h;
+            homogenous = homog;
         }
 
         double magnitude() const { // Calcuate the magnitude of the vector
-            return sqrt(lengthSquared());
+            return std::sqrt(lengthSquared());
         }
 
         virtual double lengthSquared() const { // Square each component of the vector
             return v[0]*v[0] + v[1]*v[1] + (homogenous ? v[2]*v[2] : 0);
         }
 
-        bool isHomog() const {return homogenous;}
+        bool Homog() const {return homogenous;}
+        void setHomog(bool set) {homogenous=set;}
 };
 
 // Type alias
@@ -114,7 +117,7 @@ inline Vec2 operator/(const Vec2 &v, double t) {
 inline double dot(const Vec2 &u, const Vec2 &v) {
     return  u.x() * v.x()
         +   u.y() * v.y()
-        +   (u.isHomog() ? u.h() * v.h() : 0);
+        +   (u.Homog() ? u.h() * v.h() : 0);
 }
 
 inline double cross(const Vec2 &u, const Vec2 &v) { //2d cross product is just a scalar
