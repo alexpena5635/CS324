@@ -279,33 +279,38 @@ Point3 operator*(const Matrix& m1, const Point3& p)
     return p3;
 }
 
-/*
-// Testing matrix mult
-int main()
-{
-    Matrix tm(3, translation, -1, -1);
-    Matrix sm(3, scaling, 0, 0, .2, .2);
-    Matrix tm2(3, translation, 10, 10);
 
-    Point2 p(-5, -5);
+// // Testing matrix mult
+// int main()
+// {
+//     // Matrix tm(3, translation, -1, -1);
+//     // Matrix sm(3, scaling, 0, 0, .2, .2);
+//     // Matrix tm2(3, translation, 10, 10);
 
-    std::cout << tm << std::endl
-        << sm   << std::endl
-        << tm2  << std::endl 
-        << p    << std::endl;
+//     // Point2 p(-5, -5);
+
+//     // std::cout << tm << std::endl
+//     //     << sm   << std::endl
+//     //     << tm2  << std::endl 
+//     //     << p    << std::endl;
     
 
-    Matrix resM = tm * sm;// * tm2;
-    std::cout << '\n' << resM << std::endl;
+//     // Matrix resM = tm * sm;// * tm2;
+//     // std::cout << '\n' << resM << std::endl;
 
 
-    // resM = tm * sm * tm2;
-    resM *= tm2;
-    std::cout << '\n' << resM << std::endl;
+//     // // resM = tm * sm * tm2;
+//     // resM *= tm2;
+//     // std::cout << '\n' << resM << std::endl;
 
 
-    std::cout << "Viewport point: " << resM * p << std::endl;
+//     // std::cout << "Viewport point: " << resM * p << std::endl;
 
-    return 0;
-}
-*/
+//     Matrix id(4, identity);
+//     Point3 p3(1, 1, 1, 1);
+
+//     std::cout << "p3: " << p3 << "\nid: \n" << id << "\n\nid * p3: " << id*p3 << std::endl;
+
+//     return 0;
+// }
+

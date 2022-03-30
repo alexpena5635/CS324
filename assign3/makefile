@@ -1,13 +1,16 @@
 CPP = g++ -std=c++1y
-OBJS = matrix.o canvas.o graphics.o plotGraphics.o plot2d.o
+OBJS = matrix.o canvas.o graphics.o plotGraphics.o cubeTest.o #plot2d.o
 
-mytest.pbm: graphic
+cube.pbm: graphic
 	./$^
 
 graphic: $(OBJS)
 	$(CPP) $^ -o $@
 
-plot2d.o: plot2d.cpp
+# plot2d.o: plot2d.cpp
+# 	$(CPP) -c $^
+
+cubeTest.o: cubeTest.cpp
 	$(CPP) -c $^
 
 plotGraphics.o: plotGraphics.cpp

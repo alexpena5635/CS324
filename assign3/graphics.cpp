@@ -13,6 +13,12 @@
 #include "canvas.h"
 #include "matrix.h"
 
+		
+/****** 
+ * 
+ * 2D Related
+ * 
+ * ******/
 
 // Initializes the window, viewport, and canvas
 void GraphicsSystem::initGraphics(	const int w, const int h, 
@@ -144,9 +150,125 @@ void GraphicsSystem::drawTo2D(color draw_color, double x, double y)
 	Point2 pixmap_curr = viewportToPixmap(viewport_curr); 
 	Point2 pixmap_goal = viewportToPixmap(viewport_goal);
 
-	// std::cout << "##### Pixmap points #####\n" \
+	// std::cout << "##### Pixmap points #####\n"
 	// 	<< pixmap_curr << '\n' << pixmap_goal << std::endl;
 
 	Line( *pixmap, pixmap_curr.x(), pixmap_curr.y(), pixmap_goal.x(), 
 		pixmap_goal.y(), draw_color);	
 }
+
+/****** 
+ * 
+ * 3D Related
+ * 
+ * ******/
+
+/*
+ * (fx, fy, fz) - Focal point; 
+ * (theta, phi, alpha) - Orientation; 
+ * (r) - Distance eye to origin
+ */
+void GraphicsSystem::defineCameraTransform(double fx, double fy, double fz, 
+	double theta, double phi, double alpha, double r)
+{
+    defineElementaryTransform(*camera, X_TRANS, -fx);
+	// std::cout << "x trans\n" << *camera << std::endl;
+
+    buildElementaryTransform(*camera, Y_TRANS, -fy);
+	// std::cout << "y trans\n" << *camera << std::endl;
+
+    buildElementaryTransform(*camera, Z_TRANS, -fz);
+	// std::cout << "z trans\n" << *camera << std::endl;
+
+    buildElementaryTransform(*camera, Y_ROT, -theta);
+    // std::cout << "y rot\n" << *camera << std::endl;
+
+	buildElementaryTransform(*camera, X_ROT, phi);
+    // std::cout << "x rot\n" << *camera << std::endl;
+
+	buildElementaryTransform(*camera, Z_ROT, -alpha);
+	// std::cout << "z rot\n" << *camera << std::endl;
+
+    buildElementaryTransform(*camera, PERSPECTIVE, r);
+	// std::cout << "perspective\n" << *camera << std::endl;
+}
+
+void GraphicsSystem::defineElementaryTransform(Matrix &m, transformCode tfCode, double tfValue)
+{
+    // m.setIdentityMatrix();
+    switch(tfCode)
+    {
+        case X_TRANS:
+            m(3, 0) = tfValue;
+            break;
+        case Y_TRANS:
+            m(3, 1) = tfValue;
+            break;
+        case Z_TRANS:
+            m(3, 2) = tfValue;
+            break;
+        case X_ROT:
+            m(1, 1) = cos(tfValue);
+            m(1, 2) = sin(tfValue);
+            m(2, 1) = -sin(tfValue);
+            m(2, 2) = cos(tfValue);
+            break;
+        case Y_ROT:
+            m(0, 0) = cos(tfValue);
+            m(0, 2) = sin(tfValue);  // -sin(tfValue);
+            m(2, 0) = -sin(tfValue); // sin(tfValue);
+            m(2, 2) = cos(tfValue);
+            break;
+        case Z_ROT:
+            m(0, 0) = cos(tfValue);
+            m(0, 1) = sin(tfValue);
+            m(1, 0) = -sin(tfValue);
+            m(1, 1) = cos(tfValue);
+            break;
+        case PERSPECTIVE:
+            m(2, 3) = -(1/tfValue);
+            break;
+        default:
+            break;
+    };
+}
+
+void GraphicsSystem::buildElementaryTransform(Matrix &tfM, transformCode tfCode, double tfValue)
+{
+    Matrix tmp(4, identity);
+    defineElementaryTransform(tmp, tfCode, tfValue);
+	//tfM *= tmp;
+    tfM =  tfM * tmp;
+}
+
+void GraphicsSystem::moveTo3D(double x, double y, double z)
+{
+    Point3 curr = applyTransform(x, y, z, *active_transform);
+
+	//std::cout << "move to aT: " << curr << std::endl;
+
+	curr = applyTransform(curr.x(), curr.y(), curr.z(), *camera);
+
+	//std::cout << "move to cam: " << curr << std::endl;
+
+    moveTo2D(curr.x(), curr.y());
+}
+
+void GraphicsSystem::draw3D(double x, double y, double z)
+{
+    Point3 goal = applyTransform(x, y, z, *active_transform);
+	//std::cout << "draw to aT: " << goal << std::endl;
+    goal = applyTransform(goal.x(), goal.y(), goal.z(), *camera);
+
+	//std::cout << "draw to cam: " << goal << std::endl;
+
+	drawTo2D(colors::BLACK, goal.x(), goal.y());
+}
+
+Point3 GraphicsSystem::applyTransform(double x, double y, double z, const Matrix& tfm)
+{
+    Point3 p(x, y, z, 1);
+	// std::cout << "in p: " << p << '\n' << "out p: " << tfm*p << std::endl;
+    return tfm*p;
+}
+

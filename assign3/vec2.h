@@ -17,8 +17,6 @@
 class Vec2 {
     private:
         double v[3];     // 3 length array. 2D points x,y + 1 for homogenous
-
-    protected:
         bool homogenous; // True when treating Vec2 as a homogenous vector
 
     public:
@@ -30,8 +28,7 @@ class Vec2 {
         /*  Getters  */
         double x()          const { return v[0]; }
         double y()          const { return v[1]; }
-        virtual double h()  const { return v[2]; } // homog. is different for 3D. Override later.
-
+        double h()          const { return v[2]; }
 
         /* Operator overloads */
         Vec2 operator-() const {
@@ -74,7 +71,7 @@ class Vec2 {
             return std::sqrt(lengthSquared());
         }
 
-        virtual double lengthSquared() const { // Square each component of the vector
+        double lengthSquared() const { // Square each component of the vector
             return v[0]*v[0] 
                 + v[1]*v[1] 
                 + (homogenous ? v[2]*v[2] : 0); // Square 'h', add, if homog.

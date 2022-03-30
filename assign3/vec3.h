@@ -13,28 +13,22 @@
 
 #include <iostream>
 
-#include "vec2.h"
-
-class Vec3 : public Vec2 {
+class Vec3 { /* : public vec2 */ // Originally I had Vec3 inherit from Vec2, caused too many issues with different storage and such. Using the same wouldve wasted memoyry for the smaller. Maybe consolidate later?
     private:
         double v[4]; // 4 length array. 3D points x,y,z + 1 for homogenous
-    /* 
-    protected: 
         bool homogenous;
-    */
+    
     public:
         /* Constructors */
-        Vec3()  : v{0.0, 0.0, 0.0, 1}   { homogenous = true; }
+        Vec3()  : v{0.0, 0.0, 0.0, 1.0}   { homogenous = true; }
         Vec3(double v0, double v1, double v2, double h=1, bool homog=true) 
                 : v{v0, v1, v2, h}      { homogenous = homog; }
 
         /*  Getters  */
-        /*
         double x()          const { return v[0]; }
         double y()          const { return v[1]; }
-        */
         double z()          const { return v[2]; }
-        double h() const override { return v[3]; }
+        double h()          const { return v[3]; }
 
         /* Operator overloads */
         Vec3 operator-() const {
@@ -44,16 +38,15 @@ class Vec3 : public Vec2 {
                     : Vec3(-v[0], -v[1], -v[2], v[3])
             );
         }
-        /*
+        
         double  operator[](int i) const { return v[i]; } // Return constant of value 
         double& operator[](int i)       { return v[i]; } // Return reference to value
-        */
         
         Vec3& operator+=(const Vec3 &vec) {
             v[0] += vec.v[0];
             v[1] += vec.v[1];
             v[2] += vec.v[2];
-            v[3] += (Homog() ? vec.v[3] : 0);            // Add 'h' if homog
+            v[3] += (homogenous ? vec.v[3] : 0);            // Add 'h' if homog
             return *this;
         }
 
@@ -61,7 +54,7 @@ class Vec3 : public Vec2 {
             v[0] *= t;
             v[1] *= t;
             v[2] *= t;
-            v[3] *= (Homog() ? t : 1);                   // Subtract 'h' if homog
+            v[3] *= (homogenous ? t : 1);                   // Subtract 'h' if homog
             return *this;
         }
 
@@ -78,23 +71,20 @@ class Vec3 : public Vec2 {
             homogenous = homog;
         }
 
-        /*
         double magnitude() const { // Calcuate the magnitude of the vector
-            return sqrt(length_squared());
+            return sqrt(lengthSquared());
         }
-        */
 
-        double lengthSquared() const override { // Square each component of the vector
+        double lengthSquared() const { // Square each component of the vector
             return v[0]*v[0] 
                 + v[1]*v[1] 
                 + v[2]*v[2] 
                 + (homogenous ? v[3]*v[3] : 0);  // Square 'h', add, if homog.
         }
 
-        /*
+        
         bool Homog() const      { return homogenous; }
         void setHomog(bool set) { homogenous = set;  }
-        */
 };
 
 /* Type alias */
