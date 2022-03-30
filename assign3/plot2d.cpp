@@ -1,14 +1,17 @@
-/* testLine.cpp
-
-CS Linux
-g++ -std=c++1y testLine.cpp canvas.cpp 
-
-https://stackoverflow.com/questions/31965413/compile-c14-code-with-g
-
-macOS:
-c++ -std=c++14 testLine.cpp canvas.cpp 
-
-
+/* 
+ * plot2d.cpp 
+ * 
+ * (Derived from starter code from lecture notes)
+ * Tests and uses the graphics system for plotting
+ * 
+ * Alex Peña
+ * CS 324
+ * Assignment 3 - 3D
+ * 03/29/2022
+ * 
+ * CS Linux
+ * g++ -std=c++1y testLine.cpp canvas.cpp 
+ * https://stackoverflow.com/questions/31965413/compile-c14-code-with-g
  */
 
 #include <iostream>

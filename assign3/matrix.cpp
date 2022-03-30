@@ -1,34 +1,40 @@
-// matrix.cpp
+/* 
+ * matrix.cpp
+ * Defines a matrix class, related methods
+ * 
+ * Alex Peña
+ * CS 324
+ * Assignment 3 - 3D
+ * 03/29/2022
+ */
+
 #include <iostream>
 
 #include "graphics.h"
 #include "matrix.h"
 
-Matrix::Matrix(int ndim, matrixtype type/*=custom*/, double tx, double ty, double sx, double sy)
+Matrix::Matrix(int dimension, matrixtype type/* = empty*/, 
+            double transform_x, double transform_y, 
+            double scale_x, double scale_y
+        )
+        : dim(dimension)
 {
-    dim = ndim;
-    m = new double*[dim]; // allocate space for the rows
-    for(int i = 0; i < dim; i++)
-    {
-        m[i] = new double[dim]; // allocate space for the columns
-    }
-
+    m.resize(dim, vector<double>(dim, 0.0));
+    
     switch(type)
     {
-        case custom:
-            resetMatrix();
+        case empty:
             break;
         case identity:
             setIdentityMatrix();
             break;
         case translation:
-            setTranslationMatrix2D(tx, ty);
+            setTranslationMatrix2D(transform_x, transform_y);
             break;
         case rotation:
-            resetMatrix();
             break;
         case scaling:
-            setScalingMatrix2D(sx, sy);
+            setScalingMatrix2D(scale_x, scale_y);
             break;
         default:
             std::cout << "ERROR: Unrecognized \"matrixtype\" type in constructor of matrix" << std::endl;
@@ -36,48 +42,14 @@ Matrix::Matrix(int ndim, matrixtype type/*=custom*/, double tx, double ty, doubl
     };
 }
 
-// Issues using the destructor bc since it is dynamically allocated it never goes out of scope or gets called
-// Matrix::~Matrix() 
-// {
-//     // Deallocate the array representing the matrix
-//     for (int i = 0; i < dim; ++i) {
-//         delete[] m[i];
-//     }
-//     delete[] m;
-// }
-void Matrix::deallocate()
-{
-    // Deallocate the array representing the matrix
-    for (int i = 0; i < dim; ++i) {
-        delete[] m[i];
-        m[i] = NULL;
-    }
-    delete[] m;
-    m = NULL;
-}
-
-
-void Matrix::print()
-{
-    for(int i = 0; i < dim; i++)
-    {
-        for (int j = 0; j < dim; j++)
-        {
-            std::cout << m[i][j] << "\t";
-        }
-        std::cout << std::endl;
-    }
-}
-
-
 void Matrix::setTranslationMatrix2D(double tx, double ty)
 {
     // Setting identity matrix
     setIdentityMatrix();
 
 	// Setting x and y translations
-	m[0][dim-1] = tx;
-	m[1][dim-1] = ty; 
+    m.at(0).at(2) = tx;
+    m.at(1).at(2) = ty;// tx; // This caused me lots of issues. I am big dumb.
 }
 
 void Matrix::setScalingMatrix2D(double sx, double sy)
@@ -86,99 +58,225 @@ void Matrix::setScalingMatrix2D(double sx, double sy)
     setIdentityMatrix();
 
 	// Setting x and y scale factors
-	m[0][0] = sx;
-	m[1][1] = sy;
+    m.at(0).at(0) = sx;
+    m.at(1).at(1) = sy;
 }
 
 void Matrix::setIdentityMatrix()
 {
-    resetMatrix(); // needed to do this as we were not intialzing the values!
     // Setting identity matrix
-    for(int i=0; i<dim; i++) 
+    for(int i=0; i<m.size(); i++) 
 	{
-		m[i][i] = 1;
+		m.at(i).at(i) = 1;
 	}
 }
 
-void Matrix::resetMatrix()
-{
-    for(int i = 0; i < dim; i++)
+/****** 
+ * 
+ * Internal operator overloads 
+ * 
+ * ******/
+
+Matrix& Matrix::operator-() {
+    Matrix res(3);
+    for(int i = 0; i < size(); i++)
     {
-        for (int j = 0; j < dim; j++)
+        for (int j = 0; j < size(); j++)
         {
-            m[i][j] = 0;
+            m.at(i).at(j) *= -1;
+            double tmp = m.at(i).at(j);
+            res(i, j) = tmp;
         }
     }
+    return *this;
 }
 
-// Operator * overload for two matricies
-// - We assume both are square and of dim*dim size
-// Reference to double check my matrix multiplication
-// - https://www.programiz.com/cpp-programming/examples/matrix-multiplication 
-Matrix& operator*(const Matrix& m1, const Matrix& m2)
-{
-    int dim = 3;
-    Matrix* res = new Matrix(dim);
+Matrix& Matrix::operator*=(const double t){
+    for (auto &row : m) {
+        for (auto &col_val : row) {
+            col_val *= t;
+        }
+    }
+    return *this;
+}
 
-    for(int i = 0; i < dim; i++)
+Matrix& Matrix::operator+=(const Matrix &matrix){
+    if(size() != matrix.size()) {
+        std::cout << "[ERROR] Operator '*=': matricies have different sizes" << std::endl;
+        exit(-1);
+    }
+
+    for(int i = 0; i < size(); i++)
     {
-        for (int j = 0; j < dim; j++)
+        for (int j = 0; j < size(); j++)
         {
-            for(int k = 0; k < dim; k++)
+            m.at(i).at(j) += matrix(i, j);
+        }
+    }
+    return *this;
+}
+
+Matrix& Matrix::operator*=(const Matrix &matrix){
+    if(size() != matrix.size()) {
+        std::cout << "[ERROR] Operator '*=': matricies have different sizes" << std::endl;
+        exit(-1);
+    }
+
+    Matrix res(size());
+
+    for(int i = 0; i < size(); i++)
+    {
+        for (int j = 0; j < size(); j++)
+        {
+            for(int k = 0; k < size(); k++)
             {
-                 (*res).m[i][j] += m1.m[i][k] * m2.m[k][j];
+                 res(i, j) += m.at(i).at(k) * matrix(k, j);
+            }
+        }
+    }
+    m = res.m;
+    return *this;
+}
+
+/****** 
+ * 
+ * External operator overloads 
+ * 
+ * ******/
+std::ostream& operator<<(std::ostream &out, const Matrix &matrix) {
+    for (int i = 0; i < matrix.size(); i++) {
+        for (int j = 0; j < matrix.size(); j++) {
+            out << matrix(i, j) << '\t';
+        }
+        out << '\n';
+    }
+    return out;
+}
+
+Matrix operator*(double t, const Matrix &matrix){
+    Matrix tmp(matrix.size());
+
+    for (int i = 0; i < matrix.size(); i++) {
+        for (int j = 0; j < matrix.size(); j++) {
+            tmp(i, j) = t*matrix(i, j);
+        }
+    }
+    return tmp;
+};
+
+Matrix operator+(const Matrix& m1, const Matrix& m2)
+{
+    if(m1.size() != m2.size()) {
+        std::cout << "[ERROR] Operator '*': matricies have different sizes" << std::endl;
+        exit(-1);
+    }
+        
+    Matrix res(m1.size());
+
+    for(int i = 0; i < res.size(); i++)
+    {
+        for (int j = 0; j < res.size(); j++)
+        {
+            res(i, j) = m1(i, j) + m2(i, j);
+        }
+    }
+
+    return res;
+}
+
+Matrix operator-(const Matrix& m1, const Matrix& m2)
+{
+    if(m1.size() != m2.size()) {
+        std::cout << "[ERROR] Operator '*': matricies have different sizes" << std::endl;
+        exit(-1);
+    }
+        
+    Matrix res(m1.size());
+
+    for(int i = 0; i < res.size(); i++)
+    {
+        for (int j = 0; j < res.size(); j++)
+        {
+            res(i, j) = m1(i, j) - m2(i, j);
+        }
+    }
+
+    return res;
+}
+
+/* Operator '*' overload for two matricies
+ * - We assume both are square and of dim*dim size
+ * Reference to double check my matrix multiplication
+ * - https://www.programiz.com/cpp-programming/examples/matrix-multiplication 
+ */
+Matrix operator*(const Matrix& m1, const Matrix& m2)
+{
+    if(m1.size() != m2.size()) {
+        std::cout << "[ERROR] Operator '*': matricies have different sizes" << std::endl;
+        exit(-1);
+    }
+        
+    Matrix res(m1.size());
+
+    for(int i = 0; i < res.size(); i++)
+    {
+        for (int j = 0; j < res.size(); j++)
+        {
+            for(int k = 0; k < res.size(); k++)
+            {
+                 res(i, j) += m1(i, k) * m2(k, j);
             }
            
         }
     }
 
-    return *res;
+    return res;
 }
 
 // Operator * overload for a matrix and a point (2d matrix against a 2d point, and so on)
-// - We assume matrix has same amount of cols as vector does rows
-Point2& operator*(const Matrix& m1, const Point2& p)
+Point2 operator*(const Matrix& m1, const Point2& p)
 {
-    const int dim = 3;
+    if(m1.size() != 3) {
+        std::cout << "[ERROR] Operator '*': matrix and vector do not match" << std::endl;
+        exit(-1);
+    }
 
-    double newPoint[dim] = {};
-	double inPoint[dim] = {p.x(), p.y(), p.h()};
+    // In my old system, I set the 'h' component to be 0, but now its 1!!!
+    // Must account for this by forcing h to be 0
+    Point2 p2(0,0,0); 
 
-    for(int i = 0; i < dim; i++)
+    for(int i = 0; i < m1.size(); i++)
     {
-        for (int j = 0; j < dim; j++)
+        for (int j = 0; j < m1.size(); j++)
         {
-            newPoint[i] += m1.m[i][j] * inPoint[j];
+            p2[i] += m1(i, j) * p[j];
             // std::cout << "newPoint[" << j << "] " << newPoint[j] << std::endl;
         }
     }
-
-    Point2 *p2 = new Point2;
-    p2->set(newPoint[0], newPoint[1], newPoint[2], true);
-    return *p2;
+    return p2;
 }
 
 // Operator * overload for a matrix and a point (3d matrix against a 3d point, and so on)
-// - We assume matrix has same amount of cols as vector does rows
-Point3& operator*(const Matrix& m1, const Point3& p)
+Point3 operator*(const Matrix& m1, const Point3& p)
 {
-    const int dim = 4;
+    if(m1.size() != 4) {
+        std::cout << "[ERROR] Operator '*': matrix and vector do not match" << std::endl;
+        exit(-1);
+    }
 
-    double newPoint[dim] = {};
-	double inPoint[dim] = {p.x(), p.y(), p.z(), p.h()};
+    // In my old system, I set the 'h' component to be 0, but now its 1!!!
+    // Must account for this by forcing h to be 0
+    Point3 p3(0,0,0,0);
 
-    for(int i = 0; i < dim; i++)
+    for(int i = 0; i < m1.size(); i++)
     {
-        for (int j = 0; j < dim; j++)
+        for (int j = 0; j < m1.size(); j++)
         {
-            newPoint[i] += m1.m[i][j] * inPoint[j];
+            p3[i] += m1(i, j) * p[j];
             // std::cout << "newPoint[" << j << "] " << newPoint[j] << std::endl;
         }
     }
-
-    Point3 *p2 = new Point3;
-    p2->set(newPoint[0], newPoint[1], newPoint[2], newPoint[3]);
-    return *p2;
+    return p3;
 }
 
 /*
@@ -191,18 +289,23 @@ int main()
 
     Point2 p(-5, -5);
 
-    tm.print();
-    std::cout << std::endl;
-    sm.print();
-    std::cout << std::endl;
-    tm2.print();
-    std::cout << std::endl << p << std::endl;
+    std::cout << tm << std::endl
+        << sm   << std::endl
+        << tm2  << std::endl 
+        << p    << std::endl;
     
 
-    Matrix resM = tm * sm * tm2;
-    std::cout << std::endl;
-    resM.print();
+    Matrix resM = tm * sm;// * tm2;
+    std::cout << '\n' << resM << std::endl;
+
+
+    // resM = tm * sm * tm2;
+    resM *= tm2;
+    std::cout << '\n' << resM << std::endl;
+
 
     std::cout << "Viewport point: " << resM * p << std::endl;
+
+    return 0;
 }
 */

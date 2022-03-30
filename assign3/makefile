@@ -1,5 +1,5 @@
 CPP = g++ -std=c++1y
-OBJS = matrix.o canvas.o graphics.o plotGraphics.o testLine.o
+OBJS = matrix.o canvas.o graphics.o plotGraphics.o plot2d.o
 
 mytest.pbm: graphic
 	./$^
@@ -7,7 +7,7 @@ mytest.pbm: graphic
 graphic: $(OBJS)
 	$(CPP) $^ -o $@
 
-testLine.o: testLine.cpp
+plot2d.o: plot2d.cpp
 	$(CPP) -c $^
 
 plotGraphics.o: plotGraphics.cpp
@@ -23,4 +23,4 @@ matrix.o: matrix.cpp
 	$(CPP) -c $^
 	
 clean: 
-	rm graphic $(OBJS)
+	rm a.out a.exe graphic $(OBJS)

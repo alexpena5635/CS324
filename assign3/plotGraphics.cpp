@@ -1,11 +1,18 @@
-
-
-
-#define _USE_MATH_DEFINES
+/* 
+ * plotGraphics.cpp
+ * Defines a plotting class on top of the graphics system
+ * 
+ * Alex Peña
+ * CS 324
+ * Assignment 3 - 3D
+ * 03/29/2022
+ */
 
 #include <cmath>
 
 #include "plotGraphics.h"
+
+#define _USE_MATH_DEFINES
 
 double eq1(double x) { return (3.0 * exp(x * -0.33) * sin(x*3)); }
 double eq2(double x)
@@ -51,8 +58,8 @@ void PlotGS::plotTest(Point2 origin)
 // Draw the first equation
 void PlotGS::plotEq1(Point2 origin)
 {
-	Point2 min(0, -3 + origin.y());
-	Point2 max(10, 3 + origin.y());
+	Point2 min(0, -3 + origin.y(), 0);
+	Point2 max(10, 3 + origin.y(), 0);
 
 	drawAxis(colors::BLACK, origin, min, max);
 
