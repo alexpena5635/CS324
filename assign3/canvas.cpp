@@ -1,5 +1,11 @@
-/* canvas.cpp
- * Starter code from lecture notes
+/* 
+ * canvas.cpp - Starter code from lecture notes.
+ * Defines methods for a canvas (vector of pixels) for graphics usage.
+ * 
+ * Alex Peña
+ * CS 324
+ * Assignment 3 - 3D
+ * 03/29/2022
  */
  
 #include <fstream>
@@ -7,40 +13,9 @@
 #include <iostream>
 #include <vector>
 #include <memory>
-#include <cmath>
 #include <algorithm>
 
 #include "canvas.h"
-
-Canvas::Canvas( std::size_t w, std::size_t h, color bg )
-    : width(w), height(h), 
-      pixels(width * height, {bg}),
-      background(bg) { }
-
-
-void Canvas::SetColor( std::size_t x, std::size_t y, color c ) {
-    if ( x >= 0 && x < width && y >= 0 && y < height ) {
-        pixels[y * width + x] = {c};
-    }
-}
-
-pixel Canvas::GetPixel( std::size_t x, std::size_t y ) const {
-    return pixels[y * width + x];
-}
-
-void Canvas::SetPixel( std::size_t x, std::size_t y, pixel p ) {
-
-    if( x >= 0 && x < width && y >= 0 && y < height ) {
-		pixels[y * width + x] = p;
-    }
-}
-
-void Canvas::Clear() {
-    for( auto& pixel : pixels ) {
-        pixel = {background};
-    }
-}
-
 
 void Line( Canvas& c, int x1, int y1, int x2, int y2, color color )
 {
@@ -92,11 +67,22 @@ void Line( Canvas& c, int x1, int y1, int x2, int y2, color color )
     }
 }
 
-void SaveCanvasToFile( Canvas const& canvas, std::string const& fileName )
+void SaveCanvasToPBM( Canvas const& canvas, std::string const& fileName )
 {
     std::fstream file(fileName, std::ios::out);
-    // Check!
     
+    if(!file.is_open()) {
+        std::cout << "File: " << fileName << " does not exsist. Exiting." << std::endl;
+        return;
+    }
+    
+    /* 
+     * First line of a '.pbm' file
+     * P6  ; defines format of .pbm
+     * 255 ; max rgba value
+     * 
+     * More info: http://netpbm.sourceforge.net/doc/pbm.html 
+     */
     file << "P6 " << canvas.Width() << " " << canvas.Height() << " 255\n";
     for( auto y = 0 ; y < canvas.Height() ; ++y ) {
         for( auto x = 0 ; x < canvas.Width() ; ++x ) {
