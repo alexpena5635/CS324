@@ -22,7 +22,7 @@ struct pixel {
 // A canvas represents the pixels in a pixmap (ex: '.pbm' file)
 class Canvas {
 	public:
-    	Canvas::Canvas( std::size_t w, std::size_t h, color bg )
+    	Canvas( std::size_t w, std::size_t h, color bg )
 			: width(w), height(h), 
 			pixels(width * height, {bg}),
 			background(bg) { }
