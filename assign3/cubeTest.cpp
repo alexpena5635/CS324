@@ -14,15 +14,15 @@
 #include "graphics.h"
 #include "matrix.h"
 
-void DrawUnitCube();
+void DrawUnitCube(const int side_length);
 
 int main()
 {
-    DrawUnitCube();
+    DrawUnitCube(1);
     return 0;
 }
 
-void DrawUnitCube()
+void DrawUnitCube(const int side_length)
 {
     GraphicsSystem gs;
     /*
@@ -40,56 +40,56 @@ void DrawUnitCube()
         25 
     );
 
-    const int side_length = 5;
+    //const int side_length = 5;
     
 
     /* Drawing the front side of the cube */
     gs.moveTo3D(0, 0, 0);
-    gs.draw3D(0, side_length, 0);
-    gs.draw3D(0, 0, side_length);
+    gs.drawTo3D(0, side_length, 0);
+    gs.drawTo3D(0, 0, side_length);
     gs.moveTo3D(0, side_length, side_length);
-    gs.draw3D(0, 0, side_length);
-    gs.draw3D(0, side_length, 0);
+    gs.drawTo3D(0, 0, side_length);
+    gs.drawTo3D(0, side_length, 0);
 
     /* Drawing the back side of the cube */
     gs.moveTo3D(side_length, side_length, 0);
-    gs.draw3D(side_length, 0, 0);
-    gs.draw3D(side_length, side_length, side_length);
+    gs.drawTo3D(side_length, 0, 0);
+    gs.drawTo3D(side_length, side_length, side_length);
     gs.moveTo3D(side_length, 0, side_length);
-    gs.draw3D(side_length, side_length, side_length);
-    gs.draw3D(side_length, 0, 0);
+    gs.drawTo3D(side_length, side_length, side_length);
+    gs.drawTo3D(side_length, 0, 0);
 
     /* Drawing the left side of the cube */
     gs.moveTo3D(side_length, 0,0);
-    gs.draw3D(0, 0, 0);
-    gs.draw3D(side_length, 0, side_length);
+    gs.drawTo3D(0, 0, 0);
+    gs.drawTo3D(side_length, 0, side_length);
     gs.moveTo3D(0, 0, side_length);
-    gs.draw3D(side_length, 0, side_length);
-    gs.draw3D(0, 0, 0);
+    gs.drawTo3D(side_length, 0, side_length);
+    gs.drawTo3D(0, 0, 0);
 
     /* Drawing the right side of the cube */
     gs.moveTo3D(0, side_length,0);
-    gs.draw3D(side_length, side_length, 0);
-    gs.draw3D(0, side_length, side_length);
+    gs.drawTo3D(side_length, side_length, 0);
+    gs.drawTo3D(0, side_length, side_length);
     gs.moveTo3D(side_length, side_length, side_length);
-    gs.draw3D(0, side_length, side_length);
-    gs.draw3D(side_length, side_length, 0);
+    gs.drawTo3D(0, side_length, side_length);
+    gs.drawTo3D(side_length, side_length, 0);
 
     /* Drawing the bottom side of the cube */
     gs.moveTo3D(side_length, 0,0);
-    gs.draw3D(side_length, side_length, 0);
-    gs.draw3D(0, 0, 0);
+    gs.drawTo3D(side_length, side_length, 0);
+    gs.drawTo3D(0, 0, 0);
     gs.moveTo3D(0, side_length, 0);
-    gs.draw3D(0, 0, 0);
-    gs.draw3D(side_length, side_length, 0);
+    gs.drawTo3D(0, 0, 0);
+    gs.drawTo3D(side_length, side_length, 0);
 
     /* Drawing the top side of the cube */
     gs.moveTo3D(0, 0, side_length);
-    gs.draw3D(0, side_length, side_length);
-    gs.draw3D(side_length, 0, side_length);
+    gs.drawTo3D(0, side_length, side_length);
+    gs.drawTo3D(side_length, 0, side_length);
     gs.moveTo3D(side_length, side_length, side_length);
-    gs.draw3D(side_length, 0, side_length);
-    gs.draw3D(0, side_length, side_length);
+    gs.drawTo3D(side_length, 0, side_length);
+    gs.drawTo3D(0, side_length, side_length);
 
     gs.saveCanvas("cube.pbm");
 }

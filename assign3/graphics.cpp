@@ -153,8 +153,17 @@ void GraphicsSystem::drawTo2D(color draw_color, double x, double y)
 	// std::cout << "##### Pixmap points #####\n"
 	// 	<< pixmap_curr << '\n' << pixmap_goal << std::endl;
 
-	Line( *pixmap, pixmap_curr.x(), pixmap_curr.y(), pixmap_goal.x(), 
-		pixmap_goal.y(), draw_color);	
+
+	double e = 0.0000000001;
+	if (pixmap_curr.x() > e && pixmap_curr.y() > e 
+		&& pixmap_goal.x() > e && pixmap_goal.y() > e)
+	{
+		Line( *pixmap, pixmap_curr.x(), pixmap_curr.y(), pixmap_goal.x(), 
+			pixmap_goal.y(), draw_color);	
+	}
+
+	// Line( *pixmap, pixmap_curr.x(), pixmap_curr.y(), pixmap_goal.x(), 
+	// 	pixmap_goal.y(), draw_color);	
 }
 
 /****** 
@@ -254,15 +263,12 @@ void GraphicsSystem::moveTo3D(double x, double y, double z)
     moveTo2D(curr.x(), curr.y());
 }
 
-void GraphicsSystem::draw3D(double x, double y, double z)
+void GraphicsSystem::drawTo3D(double x, double y, double z, color draw_color/*=colors::BLACK*/)
 {
     Point3 goal = applyTransform(x, y, z, *active_transform);
-	//std::cout << "draw to aT: " << goal << std::endl;
     goal = applyTransform(goal.x(), goal.y(), goal.z(), *camera);
 
-	//std::cout << "draw to cam: " << goal << std::endl;
-
-	drawTo2D(colors::BLACK, goal.x(), goal.y());
+	drawTo2D(draw_color, goal.x(), goal.y());
 }
 
 Point3 GraphicsSystem::applyTransform(double x, double y, double z, const Matrix& tfm)

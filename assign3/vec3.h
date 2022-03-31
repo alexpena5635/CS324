@@ -13,7 +13,9 @@
 
 #include <iostream>
 
-class Vec3 { /* : public vec2 */ // Originally I had Vec3 inherit from Vec2, caused too many issues with different storage and such. Using the same wouldve wasted memoyry for the smaller. Maybe consolidate later?
+// Originally I had Vec3 inherit from Vec2, caused too many issues with different storage and such. 
+// - Using the same wouldve wasted memoyry for the smaller. Maybe consolidate later?
+class Vec3 { /* : public vec2 */ 
     private:
         double v[4]; // 4 length array. 3D points x,y,z + 1 for homogenous
         bool homogenous;

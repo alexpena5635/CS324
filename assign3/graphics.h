@@ -19,6 +19,9 @@
 #include "vec3.h"
 #include "matrix.h"
 
+const std::string SAVEPATH3D = "./output/3D/";
+const std::string SAVEPATH2D = "./output/2D/";
+
 enum transformCode {X_TRANS, Y_TRANS, Z_TRANS, X_ROT, Y_ROT, Z_ROT, PERSPECTIVE};
 
 class GraphicsSystem {
@@ -102,7 +105,7 @@ class GraphicsSystem {
 		void buildElementaryTransform(Matrix &tfM, transformCode tfCode, double tfValue);
 
 		void moveTo3D(double x, double y, double z);
-		void draw3D(double x, double y, double z);
+		void drawTo3D(double x, double y, double z, color draw_color=colors::BLACK);
 
 		/* Pass in a matrix to premultiply, the type of transform, and the value */
 		Point3 applyTransform(double x, double y, double z, const Matrix& tfm);
