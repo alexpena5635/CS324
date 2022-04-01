@@ -35,7 +35,7 @@ int main()
     GraphicsSystem gs;
     // drawCube(gs, 5, Point3(0,0,0));  // y+ horizontal right, z+ vertical down
     // drawUnitCube(gs);
-    plotEq(gs, Point3(0,0,0));
+    // plotEq(gs, Point3(0,0,0));
     return 0;
 }
 
@@ -142,7 +142,7 @@ void plotEq(GraphicsSystem &gs, Point3 origin)
     gs.defineCameraTransform
     (
         0.0, 0.0, 0.0,
-        45, 30, 0,
+        15, 30, 0,
         25
     );
 
@@ -163,35 +163,27 @@ void plotEq(GraphicsSystem &gs, Point3 origin)
 
     double z = eq(x, y, (x*x) + (y*y));
 
-    // gs.moveTo3D(x, y, z+origin.z());
-    // while (x <= x_max && y <= y_max) {
-    //     z = eq(x, y, (x*x) + (y*y));
-    //     std::cout << "looping\nx: " << x << "\ny: " << y << "\nz: " << z << "\n";
-        // gs.drawTo3D(x, y, z, colors::GREEN);
-        // gs.moveTo3D(x, y, z);
+    for (x = x_min; x <= x_max; x+=inc) {
+        // std::cout << "\r[X] Lines remaining: " << trunc(x_max-x) << std::flush;
+        for (y = y_min; y <= y_max; y+=inc) {
 
-    //     x += inc;
-    //     y += inc;
-    // }
-    double x2 = x;
-    double y2 = y;
+            std::cout << "\r[X] Lines remaining: " 
+                << trunc(x_max-x) << "\t[Y] Lines remaining: " 
+                << trunc(y_max-y) << std::flush;
 
-    for (double x2 = x; x2 <= x_max; x2+=inc) {
-        std::cout << "\rLines remaining: " << trunc(x_max-x2) << std::flush;
-        for (double y2 = y; y2 <= y_max; y2+=inc) {
-            gs.moveTo3D(x2, y2, z);
+            gs.moveTo3D(x, y, z);
 
-            z = eq(x2, y2, (x2*x2) + (y2*y2));
+            z = eq(x, y, (x*x) + (y*y));
 
-            gs.drawTo3D(x2, y2, z, colors::GREEN);
-            gs.moveTo3D(x2, y2, z);
+            gs.drawTo3D(x, y, z, colors::GREEN);
+            gs.moveTo3D(x, y, z);
 
-            // std::cout << "looping\nx2: " << x2 << "\ny2: " << y2 << "\nz: " << z << '\n' << std::endl;
+            // std::cout << "looping\nx: " << x << "\ny: " << y << "\nz: " << z << '\n' << std::endl;
         }
     }
 
     std::cout << '\n';
 
-    gs.saveCanvas(SAVEPATH3D + "plot.pbm");
+    gs.saveCanvas(SAVEPATH3D + "plot_final.pbm");
     gs.clearCanvas();
 }
