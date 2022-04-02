@@ -36,7 +36,9 @@ void drawAxis(GraphicsSystem &gs, const Point3 origin,
 
 void plotEq(GraphicsSystem &gs, const Point3 origin);
 
-void drawRubiksCube(GraphicsSystem &gs, const Point3 p, bool gap=false);
+void drawRubiksCube(GraphicsSystem &gs, const Point3 p, const int len, bool gap=false, bool init=true);
+
+void drawRubiksGrid(GraphicsSystem &gs, const Point3 p);
 
 
 int main()
@@ -46,7 +48,8 @@ int main()
     // drawCube(gs, 2, Point3(0,0,0), true, colors);  // y+ horizontal right, z+ vertical down
     // drawUnitCube(gs);
     // plotEq(gs, Point3(0,0,0));
-    // drawRubiksCube(gs, Point3(0,0,0), true);
+    // drawRubiksCube(gs, Point3(0,0,0), 2, true, true);
+    drawRubiksGrid(gs, Point3(0,0,0));
     return 0;
 }
 
@@ -233,18 +236,20 @@ void plotEq(GraphicsSystem &gs, Point3 origin)
     gs.clearCanvas();
 }
 
-void drawRubiksCube(GraphicsSystem &gs, Point3 p, bool gap/*=false*/)
+void drawRubiksCube(GraphicsSystem &gs, Point3 p, const int len, bool gap/*=false*/, bool init)
 {
-    gs.initGraphics(1000, 1000);
+    if(init) {
+        gs.initGraphics(1000, 1000);
 
-    gs.defineCameraTransform
-    (
-        0.0, 0.0, 0.0,  // phi is definitely vertical on z 
-        32, 12, 0,
-        25
-    );
+        gs.defineCameraTransform
+        (
+            0.0, 0.0, 0.0,  // phi is definitely vertical on z 
+            32, 12, 0,
+            25
+        );
+    }
 
-    int len = 2;
+    // int len = 2;
 
     int l = len;
     if(gap)
@@ -262,39 +267,64 @@ void drawRubiksCube(GraphicsSystem &gs, Point3 p, bool gap/*=false*/)
                 color cs[6] = {colors::ORANGE, colors::CYAN, colors::GREEN, colors::BLUE, colors::BLACK, colors::RED};
 
                 drawCube(gs, l, tmp, false, cs);
-
-                // color c;
-                // c = colors::BLACK;
-          
-                // if (k == 2) {
-                //     c = colors::GREEN;
-                //     // drawFace(gs, len, tmp, colors::CYAN, front);
-                //     // drawFace(gs, len, tmp, c, back);
-                //     drawFace(gs, len, tmp, colors::ORANGE, left);
-                //     // drawFace(gs, len, tmp, c, right);
-                //     drawFace(gs, len, tmp, colors::BLACK, bottom);
-
-                //     drawFace(gs, len, tmp, c, top); // This is the correct color
-                // }
-                // if (j == 2) {
-                //     c = colors::BLUE;
-                //     // drawFace(gs, len, tmp, colors::CYAN, left);
-
-                //     drawFace(gs, len, tmp, c, right); // Correct color
-                // }
-                // if (i == 2) {
-                //     c = colors::RED;
-                //     // drawFace(gs, len, tmp, colors::CYAN, left);
-
-                //     drawFace(gs, len, tmp, c, back); // correct color
-                // }
                
             }
         }
     }
 
-    std::cout << '\n';
 
-    gs.saveCanvas(SAVEPATH3D + "rubix.pbm");
+    if(init) {
+        std::cout << '\n';
+        gs.saveCanvas(SAVEPATH3D + "rubix.pbm");
+        gs.clearCanvas();
+    }
+}
+
+void drawRubiksGrid(GraphicsSystem &gs, const Point3 p)
+{
+    gs.initGraphics(1000, 1000, -75, -75, 75, 75);
+
+    gs.defineCameraTransform
+    (
+        0.0, 0.0, 0.0,  // phi is definitely vertical on z 
+        32, 12, 0,
+        25
+    );
+
+    int len = 4; // for each rubiks cube 2*3 == 6
+    // int len = 6;
+
+    int l = len/4;
+
+    for(int i = 0;  i < 10; i++) {
+        for(int j = 0;  j < 10; j++) {
+            for(int k = 0;  k < 10; k++) {
+                std::cout << "\rLines completed: " 
+                    << i << ' ' << j << ' ' << k << std::flush;
+                Point3 tmp(p.x() + len*i, p.y() + len*j, p.z() + len*k);
+
+                drawRubiksCube(gs, tmp, l, false, false);
+            }
+        }
+    }
+
+    // for(int i = 0;  i < 3; i++) {
+    //     for(int j = 0;  j < 3; j++) {
+    //         for(int k = 0;  k < 3; k++) {
+    //             // std::cout << "\rLines completed: " 
+    //             //     << trunc(j) << std::flush;
+    //             Point3 tmp(p.x() + len*i, p.y() + len*j, p.z() + len*k);
+
+
+    //             color cs[6] = {colors::ORANGE, colors::CYAN, colors::GREEN, colors::BLUE, colors::BLACK, colors::RED};
+
+    //             drawCube(gs, len, tmp, false, cs);
+    //         }
+    //     }
+    // }
+
+
+    std::cout << '\n';
+    gs.saveCanvas(SAVEPATH3D + "rubix_grid.pbm");
     gs.clearCanvas();
 }
