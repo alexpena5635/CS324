@@ -13,9 +13,20 @@
 
 #include <vector>
 
-#include "graphics.h"
+// #include "graphics.h"
+#include "vec2.h"
+#include "vec3.h"
 
 using std::vector;
+
+/*
+ * Note: had to fix the vector * matrix
+ * - had it as a matrix * column vector
+ * - correct way was row vector * matrix
+ * 
+ * 2D Fix needed as well ?
+ * 
+ */
 
 /* Matrix transformation types */
 enum matrixtype {empty, identity, translation, rotation, scaling};
@@ -60,6 +71,7 @@ Matrix operator-(const Matrix &u, const Matrix &v);
 Matrix operator*(const Matrix &u, const Matrix &v);
 
 Point2 operator*(const Matrix& m1, const Point2& p);
-Point3 operator*(const Matrix& m1, const Point3& p);
+// Point3 operator*(const Matrix& m1, const Point3& p);
+Point3 operator*(const Point3& p, const Matrix& m1); // must be row vector * matrix
 
 #endif

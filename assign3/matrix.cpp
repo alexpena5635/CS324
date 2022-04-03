@@ -10,7 +10,9 @@
 
 #include <iostream>
 
-#include "graphics.h"
+// #include "graphics.h"
+#include "vec2.h"
+#include "vec3.h"
 #include "matrix.h"
 
 Matrix::Matrix(int dimension, matrixtype type/* = empty*/, 
@@ -257,7 +259,8 @@ Point2 operator*(const Matrix& m1, const Point2& p)
 }
 
 // Operator * overload for a matrix and a point (3d matrix against a 3d point, and so on)
-Point3 operator*(const Matrix& m1, const Point3& p)
+// Point3 operator*(const Matrix& m1, const Point3& p) // NOT matrix * col vector
+Point3 operator*(const Point3& p, const Matrix& m1) // must be row vector * matrix
 {
     if(m1.size() != 4) {
         std::cout << "[ERROR] Operator '*': matrix and vector do not match" << std::endl;
@@ -272,7 +275,8 @@ Point3 operator*(const Matrix& m1, const Point3& p)
     {
         for (int j = 0; j < m1.size(); j++)
         {
-            p3[i] += m1(i, j) * p[j];
+            // p3[i] += p[j] * m1(i, j); // correct code for multing a col vector by matrix
+            p3[i] += p[j] * m1(j, i); // correct code for row vector * matrix
             // std::cout << "newPoint[" << j << "] " << newPoint[j] << std::endl;
         }
     }

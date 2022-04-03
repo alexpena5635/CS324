@@ -22,7 +22,12 @@
 const std::string SAVEPATH3D = "./output/3D/";
 const std::string SAVEPATH2D = "./output/2D/";
 
-enum transformCode {X_TRANS, Y_TRANS, Z_TRANS, X_ROT, Y_ROT, Z_ROT, PERSPECTIVE};
+enum transformCode {
+	X_TRANS, 	Y_TRANS, 	Z_TRANS, 
+	X_ROT, 		Y_ROT, 		Z_ROT, 
+	PERSPECTIVE,
+	X_SCALE, 	Y_SCALE, 	Z_SCALE
+	};
 
 class GraphicsSystem {
 	protected:
@@ -33,10 +38,19 @@ class GraphicsSystem {
 
 		std::shared_ptr<Matrix> camera, active_transform;
 
+		// Pass in a matrix to intialize, the type of transform, and the value 
+		void defineElementaryTransform(Matrix &m, transformCode tfCode, double tfValue);
+
+		// Pass in a matrix to premultiply, the type of transform, and the value 
+		void buildElementaryTransform(Matrix &tfM, transformCode tfCode, double tfValue);
+
+		// Applies active transform (psuedo-stack) against x,y,z point 
+		Point3 applyTransform(double x, double y, double z);
+
 	public:
 		GraphicsSystem() {	// Modification for 3d
 			camera	= std::make_shared<Matrix>(4, identity); // hardcoded for 3d, make (size()) if want a 2d camera too?
-			active_transform  = std::make_shared<Matrix>(4, identity);
+			// active_transform  = std::make_shared<Matrix>(4, identity);
 		}
 		GraphicsSystem(std::shared_ptr<Canvas> c) : pixmap(c) {}
 
@@ -98,20 +112,34 @@ class GraphicsSystem {
 		void defineCameraTransform(double fx, double fy, double fz, 
 			double theta, double phi, double alpha, double r);
 
-		/* Pass in a matrix to intialize, the type of transform, and the value */
-		void defineElementaryTransform(Matrix &m, transformCode tfCode, double tfValue);
-
-		/* Pass in a matrix to premultiply, the type of transform, and the value */
-		void buildElementaryTransform(Matrix &tfM, transformCode tfCode, double tfValue);
-
 		void moveTo3D(double x, double y, double z);
 		void drawTo3D(double x, double y, double z, color draw_color=colors::BLACK);
-
-		/* Pass in a matrix to premultiply, the type of transform, and the value */
-		Point3 applyTransform(double x, double y, double z, const Matrix& tfm);
-
-
+		
+		void buildActiveTransform(transformCode tfCode, double tfValue);
+		void resetActiveTransform();
+		void showActiveTransform() {
+			std::cout << *active_transform;
+		}
 };
+
+/* Utility/helper funcs */
+inline double clampd(double val, double min, double max) // need in-line bc func def
+{
+	if(val < min)
+		return min;
+	else if(val > max)
+		return max;
+	
+	return val;
+}
+
+inline double range(double val, double min, double max) // need in-line bc func def
+{
+	if(val >= min && val <= max)
+		return true;
+	
+	return false;
+}
 
 #endif
 

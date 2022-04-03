@@ -7,8 +7,6 @@
  * Assignment 3 - 3D
  * 03/29/2022
  */
-
-
 #include "graphics.h"
 #include "canvas.h"
 #include "matrix.h"
@@ -154,16 +152,18 @@ void GraphicsSystem::drawTo2D(color draw_color, double x, double y)
 	// 	<< pixmap_curr << '\n' << pixmap_goal << std::endl;
 
 
+	double f = pixmap->Height();
 	double e = 0.0000000001;
-	if (pixmap_curr.x() > e && pixmap_curr.y() > e 
-		&& pixmap_goal.x() > e && pixmap_goal.y() > e)
+	if (
+		range(pixmap_curr.x(), e, f)
+		&& range(pixmap_curr.y(), e, f)
+		&& range(pixmap_goal.x(), e, f)
+		&& range(pixmap_goal.y(), e, f)
+	)
 	{
 		Line( *pixmap, pixmap_curr.x(), pixmap_curr.y(), pixmap_goal.x(), 
 			pixmap_goal.y(), draw_color);	
 	}
-
-	// Line( *pixmap, pixmap_curr.x(), pixmap_curr.y(), pixmap_goal.x(), 
-	// 	pixmap_goal.y(), draw_color);	
 }
 
 /****** 
@@ -200,11 +200,14 @@ void GraphicsSystem::defineCameraTransform(double fx, double fy, double fz,
 
     buildElementaryTransform(*camera, PERSPECTIVE, r);
 	// std::cout << "perspective\n" << *camera << std::endl;
+
+	resetActiveTransform(); // intialize active transform
 }
 
 void GraphicsSystem::defineElementaryTransform(Matrix &m, transformCode tfCode, double tfValue)
 {
     // m.setIdentityMatrix();
+	double tfRadians = tfValue * (M_PI/180); // has to be input as radians!
     switch(tfCode)
     {
         case X_TRANS:
@@ -217,26 +220,35 @@ void GraphicsSystem::defineElementaryTransform(Matrix &m, transformCode tfCode, 
             m(3, 2) = tfValue;
             break;
         case X_ROT:
-            m(1, 1) = cos(tfValue);
-            m(1, 2) = sin(tfValue);
-            m(2, 1) = -sin(tfValue);
-            m(2, 2) = cos(tfValue);
+            m(1, 1) = cos(tfRadians);
+            m(1, 2) = sin(tfRadians);
+            m(2, 1) = -sin(tfRadians);
+            m(2, 2) = cos(tfRadians);
             break;
         case Y_ROT:
-            m(0, 0) = cos(tfValue);
-            m(0, 2) = sin(tfValue);  // -sin(tfValue);
-            m(2, 0) = -sin(tfValue); // sin(tfValue);
-            m(2, 2) = cos(tfValue);
+			m(0, 0) = cos(tfRadians);
+            m(0, 2) = sin(tfRadians);  // -sin(tfValue);
+            m(2, 0) = -sin(tfRadians); // sin(tfValue);
+            m(2, 2) = cos(tfRadians);
             break;
         case Z_ROT:
-            m(0, 0) = cos(tfValue);
-            m(0, 1) = sin(tfValue);
-            m(1, 0) = -sin(tfValue);
-            m(1, 1) = cos(tfValue);
+            m(0, 0) = cos(tfRadians);
+            m(0, 1) = sin(tfRadians);
+            m(1, 0) = -sin(tfRadians);
+            m(1, 1) = cos(tfRadians);
             break;
         case PERSPECTIVE:
             m(2, 3) = -(1/tfValue);
             break;
+		case X_SCALE:
+			m(0,0) = tfValue;
+			break;
+		case Y_SCALE:
+			m(1,1) = tfValue;
+			break;
+		case Z_SCALE:
+			m(2,2) = tfValue;
+			break;
         default:
             break;
     };
@@ -246,35 +258,62 @@ void GraphicsSystem::buildElementaryTransform(Matrix &tfM, transformCode tfCode,
 {
     Matrix tmp(4, identity);
     defineElementaryTransform(tmp, tfCode, tfValue);
-	//tfM *= tmp;
-    tfM =  tfM * tmp;
+
+	/* 
+	 * The BuildElementaryTransform routine creates a new transform 
+	 * by premultiplying a transform by a new transform 
+	 * (as specified by the arguments to the routine).
+	 * 
+	 * Pre multiply a transform (ex. A), by a new transform (ex.B)
+	 * pre: BA
+	 * 
+	 * tfM -> A, tmp ->B
+	 * 
+	 * So we need: tfM = tmp * tfM!!!!!!!!!!!!!!!!!!!
+	 */
+
+    // tfM =  tfM * tmp; // This is post-multiplying
+	tfM = tmp * tfM; // pre multiply!
+	
 }
 
 void GraphicsSystem::moveTo3D(double x, double y, double z)
 {
-    Point3 curr = applyTransform(x, y, z, *active_transform);
-
-	//std::cout << "move to aT: " << curr << std::endl;
-
-	curr = applyTransform(curr.x(), curr.y(), curr.z(), *camera);
-
-	//std::cout << "move to cam: " << curr << std::endl;
-
+	// std::cout << "before move:\n" << x << ' ' << y << ' ' << z << ' ';
+ 	Point3 curr = applyTransform(x, y, z);
     moveTo2D(curr.x(), curr.y());
+	// std::cout << "after move:\n" << curr;
 }
 
 void GraphicsSystem::drawTo3D(double x, double y, double z, color draw_color/*=colors::BLACK*/)
 {
-    Point3 goal = applyTransform(x, y, z, *active_transform);
-    goal = applyTransform(goal.x(), goal.y(), goal.z(), *camera);
-
+	// std::cout << "before draw:\n" << x << ' ' << y << ' ' << z << ' ';
+	Point3 goal = applyTransform(x, y, z);
+	// std::cout << "after apply transform\n";
 	drawTo2D(draw_color, goal.x(), goal.y());
+	// std::cout << "after draw:\n" << goal;
 }
 
-Point3 GraphicsSystem::applyTransform(double x, double y, double z, const Matrix& tfm)
+Point3 GraphicsSystem::applyTransform(double x, double y, double z)
 {
     Point3 p(x, y, z, 1);
-	// std::cout << "in p: " << p << '\n' << "out p: " << tfm*p << std::endl;
-    return tfm*p;
+	return p * (*active_transform);
 }
 
+void GraphicsSystem::buildActiveTransform(transformCode tfCode, double tfValue)
+{
+	/*
+	* Create a new matrix of type tfCode
+	* new matrix 'B', active transform 'a'
+	* do BA, store as new active_transform
+	*/
+	buildElementaryTransform(*active_transform, tfCode, tfValue);
+}
+
+void GraphicsSystem::resetActiveTransform()
+{
+	// Set active transform back to just the camera transform
+	active_transform = std::make_shared<Matrix>(
+		(Matrix(4, identity) * (*camera))
+	);
+}
