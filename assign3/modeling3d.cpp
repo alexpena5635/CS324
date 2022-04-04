@@ -38,6 +38,7 @@ void drawRubiksGrid(GraphicsSystem &gs, const Point3 p);
 void drawFace(GraphicsSystem &gs, const std::vector<Point3> &points, const double depth=0.0);
 void drawShape(GraphicsSystem &gs, const std::vector<Point3> &points);
 void drawRecognizer(GraphicsSystem &gs);
+void drawBlockLetters(GraphicsSystem &gs);
 
 int main()
 {
@@ -48,6 +49,7 @@ int main()
     // drawRubiksCube(gs, Point3(0,0,0), true, true);
     // drawRubiksGrid(gs, Point3(0,0,0));
     // drawRecognizer(gs);
+    drawBlockLetters(gs);
     return 0;
 }
 
@@ -520,5 +522,86 @@ void drawRecognizer(GraphicsSystem &gs)
     }
 
     gs.saveCanvas(SAVEPATH3D + "recognizer.pbm");
+    gs.clearCanvas();
+}
+
+void drawBlockLetters(GraphicsSystem &gs)
+{
+    gs.initGraphics(1000, 1000, -200, -200, 200, 200);
+
+    gs.defineCameraTransform
+    (
+        0.0, 0.0, 0.0,  
+        10, 10, 0,
+        25
+    );
+
+    std::vector<Point3> a{{
+        {-75, 0, 0},
+        {-70, 0, 0},
+        {-66, 10, 0}, 
+        {-62, 10, 0},
+        {-58, 0, 0},
+        {-53, 0, 0},
+        {-60, 30, 0},
+        {-70, 30, 0},
+    }};
+
+    std::vector<Point3> a_mid{{
+        {-66, 12, 0},
+        {-62, 12, 0},
+        {-64, 26, 0},
+    }};
+
+    std::vector<Point3> l{{
+        {-45, 0, 0},
+        {-30, 0, 0},
+        {-30, 5, 0},
+        {-40, 5, 0},
+        {-40, 30, 0},
+        {-45, 30, 0},
+    }};
+
+    std::vector<Point3> e{{
+        {-22, 0, 0},
+        {-7, 0, 0},
+        {-7, 6, 0},
+        {-17, 6, 0},
+        {-17, 12, 0},
+        {-7, 12, 0},
+        {-7, 18, 0},
+        {-17, 18, 0},
+        {-17, 24, 0},
+        {-7, 24, 0},
+        {-7, 30, 0},
+        {-22, 30, 0},
+    }};
+
+    std::vector<Point3> x{{
+        {1, 0, 0},
+        {6, 0, 0},
+        {8, 14, 0},
+        {10, 0, 0},
+        {15, 0, 0},
+        {12, 15, 0},
+        {15, 30, 0},
+        {10, 30, 0},
+        {7, 16, 0},
+        {6, 30, 0},
+        {1, 30, 0},
+        {3, 15, 0}
+    }};
+
+
+
+    std::vector<vector<Point3>> letters{
+        a, a_mid, l, e, x
+    };
+
+    for(const auto &letter : letters) {
+        drawShape(gs, letter);
+    }
+
+    gs.saveCanvas(SAVEPATH3D + "letters.pbm");
     gs.clearCanvas();
 }
