@@ -35,6 +35,10 @@ void plotEq(GraphicsSystem &gs, const Point3 origin);
 void drawRubiksCube(GraphicsSystem &gs, const Point3 p, bool gap=false, bool init=true);
 void drawRubiksGrid(GraphicsSystem &gs, const Point3 p);
 
+void drawFace(GraphicsSystem &gs, const std::vector<Point3> &points, const double depth=0.0);
+void drawShape(GraphicsSystem &gs, const std::vector<Point3> &points);
+void drawRecognizer(GraphicsSystem &gs);
+
 int main()
 {
     GraphicsSystem gs;
@@ -43,6 +47,7 @@ int main()
     // plotEq(gs, Point3(0,0,0));
     // drawRubiksCube(gs, Point3(0,0,0), true, true);
     // drawRubiksGrid(gs, Point3(0,0,0));
+    // drawRecognizer(gs);
     return 0;
 }
 
@@ -294,5 +299,226 @@ void drawRubiksGrid(GraphicsSystem &gs, const Point3 p)
 
     std::cout << '\n';
     gs.saveCanvas(SAVEPATH3D + "rubix_grid.pbm");
+    gs.clearCanvas();
+}
+
+void drawFace(GraphicsSystem &gs, const std::vector<Point3> &points, const double depth/*=0.0*/)
+{
+    // Move to the first point
+    gs.moveTo3D(points.front().x(), points.front().y(), points.front().z() + depth);
+
+    // Draw lines between each subsequent point
+    for(const auto& point : points) {
+        gs.drawTo3D(point.x(), point.y(), point.z() + depth);
+        gs.moveTo3D(point.x(), point.y(), point.z() + depth);
+    }
+
+    // Draw line back to the first point
+    gs.drawTo3D(points.front().x(), points.front().y(), points.front().z() + depth);
+}
+
+void drawShape(GraphicsSystem &gs, const std::vector<Point3> &points)
+{
+    const double depth = 20;
+
+    drawFace(gs, points, 0);
+    drawFace(gs, points, depth);
+
+    for(const auto& point : points) {
+        gs.moveTo3D(point.x(), point.y(), point.z());
+        gs.drawTo3D(point.x(), point.y(), point.z() + depth);
+    }
+}
+
+void drawRecognizer(GraphicsSystem &gs)
+{
+    gs.initGraphics(1000, 1000, -200, -200, 200, 200);
+
+    gs.defineCameraTransform
+    (
+        0.0, 0.0, 0.0,  // phi is definitely vertical on z 
+        10, 5, 0,
+        25
+    );
+
+    // Draw this once for front of left lag
+    // - again at z = depth for back
+    // Repeat with flipped x for right leg
+    std::vector<Point3> left_leg{{
+        {-75, 0, 0},
+        {-25, 0, 0},
+        {-45, 10, 0}, 
+        {-45, 100, 0},
+        {-75, 100, 0}
+    }};
+
+    std::vector<Point3> right_leg{{
+        {75, 0, 0},
+        {25, 0, 0},
+        {45, 10, 0}, 
+        {45, 100, 0},
+        {75, 100, 0}
+    }};
+
+    std::vector<Point3> middle_bar_left {{
+        {-75, 105, 0},
+        {0, 105, 0},
+        {0, 110, 0},
+        {-75, 110, 0}
+    }};
+
+    std::vector<Point3> middle_bar_right {{
+        {75, 105, 0},
+        {0, 105, 0},
+        {0, 110, 0},
+        {75, 110, 0}
+    }};
+
+    std::vector<Point3> middle_low_left {{
+        {-12, 104, 0},
+        {0, 104, 0},
+        {0, 99, 0},
+        {-8, 99, 0}
+    }};
+
+    std::vector<Point3> middle_low_right {{
+        {12, 104, 0},
+        {0, 104, 0},
+        {0, 99, 0},
+        {8, 99, 0}
+    }};
+
+    std::vector<Point3> middle_high_left {{
+        {-12, 114, 0},
+        {0, 114, 0},
+        {0, 117, 0},
+        {-12, 117, 0}
+    }};
+
+    std::vector<Point3> middle_high_right {{
+        {12, 114, 0},
+        {0, 114, 0},
+        {0, 117, 0},
+        {12, 117, 0}
+    }};
+
+    std::vector<Point3> left_cube {{
+        {-75, 117, 0},
+        {-45, 117, 0},
+        {-45, 137, 0},
+        {-75, 137, 0}
+    }};
+
+    std::vector<Point3> right_cube {{
+        {75, 117, 0},
+        {45, 117, 0},
+        {45, 137, 0},
+        {75, 137, 0}
+    }};
+
+    std::vector<Point3> left_small_rect {{
+        {-42, 124, 0},
+        {-32, 124, 0},
+        {-32, 128, 0},
+        {-42, 128, 0}
+    }};
+
+    std::vector<Point3> right_small_rect {{
+        {42, 124, 0},
+        {32, 124, 0},
+        {32, 128, 0},
+        {42, 128, 0}
+    }};
+
+    std::vector<Point3> left_bracket {{
+        {-80, 142, 0},
+        {-42, 142, 0},
+        {-20, 120, 0},
+        {-3, 120, 0},
+        {-3, 125, 0},
+        {-10, 125, 0},
+        {-25, 142, 0},
+        {-3, 142, 0},
+        {-3, 147, 0},
+        {-80, 147, 0}
+    }};
+
+    std::vector<Point3> right_bracket {{
+        {80, 142, 0},
+        {42, 142, 0},
+        {20, 120, 0},
+        {3, 120, 0},
+        {3, 125, 0},
+        {10, 125, 0},
+        {25, 142, 0},
+        {3, 142, 0},
+        {3, 147, 0},
+        {80, 147, 0}
+    }};
+
+    std::vector<Point3> left_middle_rect {{
+        {-7, 128, 0},
+        {0, 128, 0},
+        {0, 139, 0},
+        {-20, 139, 0}
+    }};
+
+    std::vector<Point3> right_middle_rect {{
+        {7, 128, 0},
+        {0, 128, 0},
+        {0, 139, 0},
+        {20, 139, 0}
+    }};
+
+    std::vector<Point3> left_tri_top {{
+        {-40, 152, 0},
+        {0, 152, 0},
+        {0, 155, 0},
+        {-10, 155, 0},
+        {-8, 170, 0}
+    }};
+
+    std::vector<Point3> right_tri_top {{
+        {40, 152, 0},
+        {0, 152, 0},
+        {0, 155, 0},
+        {10, 155, 0},
+        {8, 170, 0}
+    }};
+
+    std::vector<Point3> left_head {{
+        {-8, 158, 0},
+        {0, 158, 0},
+        {0, 175, 0},
+        {-8, 175, 0},
+        {-6, 170, 0}
+    }};
+    
+    std::vector<Point3> right_head {{
+        {8, 158, 0},
+        {0, 158, 0},
+        {0, 175, 0},
+        {8, 175, 0},
+        {6, 170, 0}
+    }};
+    
+    std::vector<vector<Point3>> shapes{
+        left_leg, right_leg, 
+        middle_bar_left, middle_bar_right,
+        middle_low_left, middle_low_right,
+        middle_high_left, middle_high_right,
+        left_cube, right_cube,
+        left_small_rect, right_small_rect,
+        left_bracket, right_bracket,
+        left_middle_rect, right_middle_rect,
+        left_tri_top, right_tri_top,
+        left_head, right_head
+    };
+
+    for(const auto &shape : shapes) {
+        drawShape(gs, shape);
+    }
+
+    gs.saveCanvas(SAVEPATH3D + "recognizer.pbm");
     gs.clearCanvas();
 }
