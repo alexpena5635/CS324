@@ -37,50 +37,10 @@
   </p>
 </div>
 
-<br>
 
 <a href="#generated-images">Generated Images</a>
 
-<!-- IMAGES -->
-<!-- <h3>Generated Images</h3>
-<details>
-      <summary>Block Letters</summary>
-      <ol>
-          <img src="output/3D/png/letters_final.png" alt="Logo" width="600" height="480">
-      </ol>
-    </details>
-    <details>
-      <summary>3D Plot</summary>
-      <ol>
-        <img src="output/3D/png/plot_final.png" alt="Logo" width="600" height="480">
-      </ol>
-    </details>
-    <details>
-      <summary>Tron Recognizer</summary>
-      <ol>
-        <img src="output/3D/png/recognizer_final.png" alt="Logo" width="600" height="480">
-      </ol>
-    </details>
-    <details>
-      <summary>Simple Rubix Cube</summary>
-      <ol>
-        <img src="output/3D/png/rubix_final.png" alt="Logo" width="600" height="480">
-      </ol>
-    </details>
-    <details>
-      <summary>Rubix Cube with Gaps</summary>
-      <ol>
-        <img src="output/3D/png/rubix_gaps_final.png" alt="Logo" width="600" height="480">
-      </ol>
-    </details>
-    <details>
-      <summary>Rubix Grid</summary>
-      <ol>
-        <img src="output/3D/png/rubix_grid_final.png" alt="Logo" width="600" height="480">
-      </ol>
-    </details>
-
-<br><br> -->
+<br>
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -93,7 +53,7 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ### Built With
 
-[![Vue][Vue.js]][Vue-url]
+C++
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -112,53 +72,15 @@ This is an example of how to list things you need to use the software and how to
   npm install npm@latest -g
   ```
 
-### Installation
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Alex Peña - alexpena5635@gmail.com
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+Project Link: [https://github.com/alexpena5635/CS324/tree/main/assign3](https://github.com/alexpena5635/CS324/tree/main/assign3)
 
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* []()
-* []()
-* []()
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
