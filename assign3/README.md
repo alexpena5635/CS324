@@ -53,7 +53,7 @@ Here's a blank template to get started: To avoid retyping too much info. Do a se
 
 ### Built With
 
-C++
+C++, C
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
