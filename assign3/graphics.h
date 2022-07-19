@@ -19,8 +19,8 @@
 #include "vec3.h"
 #include "matrix.h"
 
-const std::string SAVEPATH3D = "./output/3D/";
-const std::string SAVEPATH2D = "./output/2D/";
+const std::string SAVEPATH3D = "./demo_output/3D/";
+const std::string SAVEPATH2D = "./demo_output/2D/";
 
 enum transformCode {
 	X_TRANS, 	Y_TRANS, 	Z_TRANS, 

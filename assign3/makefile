@@ -44,4 +44,4 @@ matrix.o: matrix.cpp
 	$(CPP) -c $^
 	
 clean: 
-	rm a.out a.exe modeling cube plot2 $(OBJS) $(CUBETEST) $(PLOT2D) $(MODEL3D)
+	rm -f a.out a.exe modeling cube plot2 $(OBJS) $(CUBETEST) $(PLOT2D) $(MODEL3D)

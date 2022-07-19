@@ -26,19 +26,21 @@ void drawAxis(GraphicsSystem &gs, const Point3 origin,
 void drawSquare(GraphicsSystem &gs, const color c);
 void drawCube(GraphicsSystem &gs, const Point3 p, const double spacing=0, 
     bool init=true, color colors[6]=default_colors);
-void drawUnitCube(GraphicsSystem &gs) {
+
+void drawUnitCube(GraphicsSystem &gs, bool init=true) {
     drawCube(gs, Point3(0,0,0));
 }
 
-void plotEq(GraphicsSystem &gs, const Point3 origin);
+void plotEq(GraphicsSystem &gs, const Point3 origin, bool init=true);
 
 void drawRubiksCube(GraphicsSystem &gs, const Point3 p, bool gap=false, bool init=true);
-void drawRubiksGrid(GraphicsSystem &gs, const Point3 p);
+void drawRubiksGrid(GraphicsSystem &gs, const Point3 p, bool init=true);
 
 void drawFace(GraphicsSystem &gs, const std::vector<Point3> &points, const double depth=0.0);
 void drawShape(GraphicsSystem &gs, const std::vector<Point3> &points);
-void drawRecognizer(GraphicsSystem &gs);
-void drawBlockLetters(GraphicsSystem &gs);
+void drawRecognizer(GraphicsSystem &gs, bool init=true);
+void drawBlockLetters(GraphicsSystem &gs, bool init=true);
+void drawLogo(GraphicsSystem &gs, bool init=true);
 
 int main()
 {
@@ -49,7 +51,8 @@ int main()
     // drawRubiksCube(gs, Point3(0,0,0), true, true);
     // drawRubiksGrid(gs, Point3(0,0,0));
     // drawRecognizer(gs);
-    drawBlockLetters(gs);
+    // drawBlockLetters(gs);
+    drawLogo(gs);
     return 0;
 }
 
@@ -269,16 +272,18 @@ void drawRubiksCube(GraphicsSystem &gs, Point3 p, bool gap/*=false*/, bool init)
     }
 }
 
-void drawRubiksGrid(GraphicsSystem &gs, const Point3 p)
+void drawRubiksGrid(GraphicsSystem &gs, const Point3 p, bool init)
 {
-    gs.initGraphics(1000, 1000, -75, -75, 75, 75);
+    if(init) {
+        gs.initGraphics(1000, 1000, -75, -75, 75, 75);
 
-    gs.defineCameraTransform
-    (
-        0.0, 0.0, 0.0,  // phi is definitely vertical on z 
-        32, 12, 0,
-        25
-    );
+        gs.defineCameraTransform
+        (
+            0.0, 0.0, 0.0,  // phi is definitely vertical on z 
+            32, 12, 0,
+            25
+        );
+    }
 
     int len = 4; // for each rubiks cube 2*3 == 6
     // int len = 6;
@@ -298,10 +303,11 @@ void drawRubiksGrid(GraphicsSystem &gs, const Point3 p)
         }
     }
 
-
-    std::cout << '\n';
-    gs.saveCanvas(SAVEPATH3D + "rubix_grid.pbm");
-    gs.clearCanvas();
+    if(init) {
+        std::cout << '\n';
+        gs.saveCanvas(SAVEPATH3D + "rubix_grid.pbm");
+        gs.clearCanvas();
+    }
 }
 
 void drawFace(GraphicsSystem &gs, const std::vector<Point3> &points, const double depth/*=0.0*/)
@@ -332,16 +338,18 @@ void drawShape(GraphicsSystem &gs, const std::vector<Point3> &points)
     }
 }
 
-void drawRecognizer(GraphicsSystem &gs)
+void drawRecognizer(GraphicsSystem &gs, bool init)
 {
-    gs.initGraphics(1000, 1000, -200, -200, 200, 200);
+    if(init) {
+        gs.initGraphics(1000, 1000, -200, -200, 200, 200);
 
-    gs.defineCameraTransform
-    (
-        0.0, 0.0, 0.0,  // phi is definitely vertical on z 
-        10, 5, 0,
-        25
-    );
+        gs.defineCameraTransform
+        (
+            0.0, 0.0, 0.0,  // phi is definitely vertical on z 
+            10, 5, 0,
+            25
+        );
+    }
 
     // Draw this once for front of left lag
     // - again at z = depth for back
@@ -521,20 +529,24 @@ void drawRecognizer(GraphicsSystem &gs)
         drawShape(gs, shape);
     }
 
-    gs.saveCanvas(SAVEPATH3D + "recognizer.pbm");
-    gs.clearCanvas();
+    if(init) {
+        gs.saveCanvas(SAVEPATH3D + "recognizer.pbm");
+        gs.clearCanvas();
+    }
 }
 
-void drawBlockLetters(GraphicsSystem &gs)
+void drawBlockLetters(GraphicsSystem &gs, bool init)
 {
-    gs.initGraphics(1000, 1000, -200, -200, 200, 200);
+    if(init) {
+        gs.initGraphics(1000, 1000, -200, -200, 200, 200);
 
-    gs.defineCameraTransform
-    (
-        0.0, 0.0, 0.0,  
-        10, 10, 0,
-        25
-    );
+        gs.defineCameraTransform
+        (
+            0.0, 0.0, 0.0,  
+            10, 10, 0,
+            25
+        );
+    }
 
     std::vector<Point3> a{{
         {-75, 0, 0},
@@ -602,6 +614,95 @@ void drawBlockLetters(GraphicsSystem &gs)
         drawShape(gs, letter);
     }
 
-    gs.saveCanvas(SAVEPATH3D + "letters.pbm");
-    gs.clearCanvas();
+    if(init){ 
+        gs.saveCanvas(SAVEPATH3D + "letters.pbm");
+        gs.clearCanvas();
+    }
+}
+
+void drawLogo(GraphicsSystem &gs, bool init)
+{
+    if(init) {
+        gs.initGraphics(1000, 1000, -150, -150, 150, 150);
+
+        gs.defineCameraTransform
+        (
+            0.0, 0.0, 0.0,  
+            10, 10, 0,
+            25
+        );
+    }
+
+    std::vector<Point3> a{{
+        {-75, 0, 0},
+        {-70, 0, 0},
+        {-66, 10, 0}, 
+        {-62, 10, 0},
+        {-58, 0, 0},
+        {-53, 0, 0},
+        {-60, 30, 0},
+        {-70, 30, 0},
+    }};
+
+    std::vector<Point3> a_mid{{
+        {-66, 12, 0},
+        {-62, 12, 0},
+        {-64, 26, 0},
+    }};
+
+    std::vector<Point3> l{{
+        {-45, 0, 0},
+        {-30, 0, 0},
+        {-30, 5, 0},
+        {-40, 5, 0},
+        {-40, 30, 0},
+        {-45, 30, 0},
+    }};
+
+    std::vector<Point3> e{{
+        {-22, 0, 0},
+        {-7, 0, 0},
+        {-7, 6, 0},
+        {-17, 6, 0},
+        {-17, 12, 0},
+        {-7, 12, 0},
+        {-7, 18, 0},
+        {-17, 18, 0},
+        {-17, 24, 0},
+        {-7, 24, 0},
+        {-7, 30, 0},
+        {-22, 30, 0},
+    }};
+
+    std::vector<Point3> x{{
+        {1, 0, 0},
+        {6, 0, 0},
+        {8, 14, 0},
+        {10, 0, 0},
+        {15, 0, 0},
+        {12, 15, 0},
+        {15, 30, 0},
+        {10, 30, 0},
+        {7, 16, 0},
+        {6, 30, 0},
+        {1, 30, 0},
+        {3, 15, 0}
+    }};
+
+
+
+    std::vector<vector<Point3>> letters{
+        a, a_mid, l, e, x
+    };
+
+    for(const auto &letter : letters) {
+        drawShape(gs, letter);
+    }
+
+    drawRubiksGrid(gs, l.front() - Point3(0, 50, 0), false);
+
+    if(init) {
+        gs.saveCanvas(SAVEPATH3D + "logo.pbm");
+        gs.clearCanvas();
+    }
 }
