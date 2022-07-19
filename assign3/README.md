@@ -51,41 +51,31 @@
     <details>
       <summary>3D Plot</summary>
       <ol>
-        <li>
-          <img src="output/3D/png/plot_final.png" alt="Logo" width="600" height="480">
-        </li>
+        <img src="output/3D/png/plot_final.png" alt="Logo" width="600" height="480">
       </ol>
     </details>
     <details>
       <summary>Tron Recognizer</summary>
       <ol>
-        <li>
-          <img src="output/3D/png/recognizer_final.png" alt="Logo" width="600" height="480">
-        </li>
+        <img src="output/3D/png/recognizer_final.png" alt="Logo" width="600" height="480">
       </ol>
     </details>
     <details>
       <summary>Simple Rubix Cube</summary>
       <ol>
-        <li>
-          <img src="output/3D/png/rubix_final.png" alt="Logo" width="600" height="480">
-        </li>
+        <img src="output/3D/png/rubix_final.png" alt="Logo" width="600" height="480">
       </ol>
     </details>
     <details>
       <summary>Rubix Cube with Gaps</summary>
       <ol>
-        <li>
-          <img src="output/3D/png/rubix_gaps_final.png" alt="Logo" width="600" height="480">
-        </li>
+        <img src="output/3D/png/rubix_gaps_final.png" alt="Logo" width="600" height="480">
       </ol>
     </details>
     <details>
       <summary>Rubix Grid</summary>
       <ol>
-        <li>
-          <img src="output/3D/png/rubix_grid_final.png" alt="Logo" width="600" height="480">
-        </li>
+        <img src="output/3D/png/rubix_grid_final.png" alt="Logo" width="600" height="480">
       </ol>
     </details>
 
