@@ -25,7 +25,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/alexpena5635/CS324/tree/main/assign3">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="RubiksCube.gif" alt="Logo" width="80" height="80">
   </a>
 
 <h3 align="center">2D/3D Wireframe Graphics System</h3>
@@ -77,6 +77,9 @@ Project Link: [https://github.com/alexpena5635/CS324/tree/main/assign3](https://
 
 ## Generated Images
 <p align="right">(<a href="#top">back to top</a>)</p><br>
+  <summary>Process of Building Rubiks Grid</summary>
+    <img src="RubiksCube.gif" alt="Logo" width="600" height="480">
+    
   <summary>Block Letters</summary>
     <img src="output/3D/png/letters_final.png" alt="Logo" width="600" height="480">
 
