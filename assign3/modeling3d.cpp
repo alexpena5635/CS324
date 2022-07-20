@@ -46,13 +46,13 @@ int main()
 {
     GraphicsSystem gs;
     // drawUnitCube(gs);
-    // drawCube(gs, Point3(0,0,0), 0.075);
+    // drawCube(gs, Point3(0,0,0));
     // plotEq(gs, Point3(0,0,0));
-    // drawRubiksCube(gs, Point3(0,0,0), true, true);
-    // drawRubiksGrid(gs, Point3(0,0,0));
+    // drawRubiksCube(gs, Point3(0,0,0));
+    drawRubiksGrid(gs, Point3(0,0,0));
     // drawRecognizer(gs);
     // drawBlockLetters(gs);
-    drawLogo(gs);
+    // drawLogo(gs);
     return 0;
 }
 
@@ -133,7 +133,6 @@ void plotEq(GraphicsSystem &gs, Point3 origin)
     gs.clearCanvas();
 }
 
-
 void drawSquare(GraphicsSystem &gs, const color c)
 {
     Point3 vs[4] = {
@@ -163,10 +162,16 @@ void drawCube(GraphicsSystem &gs, const Point3 p, const double spacing, bool ini
     if (init) {
         gs.initGraphics(1000, 1000, -5, -5, 5, 5);
 
+        // gs.defineCameraTransform
+        // (
+        //     0.0, 1.0, 0.0,
+        //     45, 30, 0,
+        //     25 
+        // );
         gs.defineCameraTransform
         (
             0.0, 1.0, 0.0,
-            45, 30, 0,
+            30, 30, 0,
             25 
         );
     }
@@ -178,13 +183,13 @@ void drawCube(GraphicsSystem &gs, const Point3 p, const double spacing, bool ini
     gs.buildActiveTransform(X_TRANS, p.x());
     gs.buildActiveTransform(Y_TRANS, p.y());
     gs.buildActiveTransform(Z_TRANS, p.z());
-    drawSquare(gs, colors[0]);
+    drawSquare(gs, colors::RED);
 
     // back
     gs.buildActiveTransform(Z_TRANS, -2);
     
     gs.buildActiveTransform(Z_TRANS, -b); // spacing out each face
-    drawSquare(gs, colors::RED);
+    drawSquare(gs, colors::CYAN);
     gs.buildActiveTransform(Z_TRANS, b); // spacing out each face
 
     // left
@@ -192,7 +197,7 @@ void drawCube(GraphicsSystem &gs, const Point3 p, const double spacing, bool ini
     gs.buildActiveTransform(Y_ROT, -90);
 
     gs.buildActiveTransform(Z_TRANS, b); // spacing out each face
-    drawSquare(gs, colors::BLUE);
+    drawSquare(gs, colors::YELLOW);
     gs.buildActiveTransform(Z_TRANS, -b); // spacing out each face
 
     // right
@@ -200,7 +205,7 @@ void drawCube(GraphicsSystem &gs, const Point3 p, const double spacing, bool ini
     gs.buildActiveTransform(Y_ROT, 90); 
 
     gs.buildActiveTransform(Z_TRANS, b); // spacing out each face
-    drawSquare(gs, colors::CYAN);
+    drawSquare(gs, colors::GREEN);
     gs.buildActiveTransform(Z_TRANS, -b); // spacing out each face
 
     // top
@@ -208,7 +213,7 @@ void drawCube(GraphicsSystem &gs, const Point3 p, const double spacing, bool ini
     gs.buildActiveTransform(X_ROT, -90);
 
     gs.buildActiveTransform(Z_TRANS, b); // spacing out each face
-    drawSquare(gs, colors::ORANGE);
+    drawSquare(gs, colors::BLUE);
     gs.buildActiveTransform(Z_TRANS, -b); // spacing out each face
 
     // bottom
@@ -216,7 +221,7 @@ void drawCube(GraphicsSystem &gs, const Point3 p, const double spacing, bool ini
     gs.buildActiveTransform(X_ROT, 90);
 
     gs.buildActiveTransform(Z_TRANS, b); // spacing out each face
-    drawSquare(gs, colors::GREEN);
+    drawSquare(gs, colors::ORANGE);
     gs.buildActiveTransform(Z_TRANS, -b); // spacing out each face
 
     gs.resetActiveTransform();
@@ -229,6 +234,7 @@ void drawCube(GraphicsSystem &gs, const Point3 p, const double spacing, bool ini
     }
 }
 
+int count = 0;
 void drawRubiksCube(GraphicsSystem &gs, Point3 p, bool gap/*=false*/, bool init)
 {
     if(init) {
@@ -236,9 +242,9 @@ void drawRubiksCube(GraphicsSystem &gs, Point3 p, bool gap/*=false*/, bool init)
 
         gs.defineCameraTransform
         (
-            0.0, 0.0, 0.0,  // phi is definitely vertical on z 
-            32, 12, 0,
-            25
+            0.0, 1.0, 0.0,
+            45, 30, 0,
+            25 
         );
     }
 
@@ -258,12 +264,16 @@ void drawRubiksCube(GraphicsSystem &gs, Point3 p, bool gap/*=false*/, bool init)
                     gs.buildActiveTransform(Z_SCALE, 0.5);
                 }
 
-                drawCube(gs, tmp, 0, false, cs);
+                drawCube(gs, tmp, 0.55, false, cs);
                 gs.resetActiveTransform();
             }
         }
     }
 
+
+    /* FOR TESTING ONLY */
+	gs.saveCanvas(SAVEPATH3D + "process/" + "rubix_grid_" + std::to_string(count) + ".pbm");
+	count++;
 
     if(init) {
         std::cout << '\n';
@@ -275,13 +285,19 @@ void drawRubiksCube(GraphicsSystem &gs, Point3 p, bool gap/*=false*/, bool init)
 void drawRubiksGrid(GraphicsSystem &gs, const Point3 p, bool init)
 {
     if(init) {
-        gs.initGraphics(1000, 1000, -75, -75, 75, 75);
+        gs.initGraphics(1000, 1000, -25, -25, 75, 75);
 
+        // gs.defineCameraTransform
+        // (
+        //     0.0, 0.0, 0.0,  // phi is definitely vertical on z 
+        //     32, 12, 0,
+        //     25
+        // );
         gs.defineCameraTransform
         (
-            0.0, 0.0, 0.0,  // phi is definitely vertical on z 
-            32, 12, 0,
-            25
+            0.0, 1.0, 0.0,
+            115, 15, 25, // 115, 15, 25
+            25 
         );
     }
 
@@ -290,8 +306,17 @@ void drawRubiksGrid(GraphicsSystem &gs, const Point3 p, bool init)
 
     int l = len/4;
 
+    // Parrallel processing!!!
+    #pragma omp parallel
+
+    #pragma omp for
     for(int i = 0;  i < 10; i++) {
+
+        #pragma omp for
         for(int j = 0;  j < 10; j++) {
+
+
+            #pragma omp for
             for(int k = 0;  k < 10; k++) {
                 std::cout << "\rLines completed: " 
                     << i << ' ' << j << ' ' << k << std::flush;
@@ -305,7 +330,7 @@ void drawRubiksGrid(GraphicsSystem &gs, const Point3 p, bool init)
 
     if(init) {
         std::cout << '\n';
-        gs.saveCanvas(SAVEPATH3D + "rubix_grid.pbm");
+        // gs.saveCanvas(SAVEPATH3D + "rubix_grid.pbm");
         gs.clearCanvas();
     }
 }

@@ -27,6 +27,7 @@ namespace colors {
 	constexpr color BLUE	{   0,   	0, 		255 };
 	constexpr color ORANGE	{	255,	165,	0	};
 	constexpr color CYAN	{	0,		255,	255 };
+	constexpr color YELLOW	{	255,	255,	0 	};
 }
 
 #endif
