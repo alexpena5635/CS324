@@ -31,7 +31,7 @@
 <h3 align="center">2D/3D Wireframe Graphics System</h3>
 
   <p align="center">
-    2D/3D graphics system capable of plotting and wireframe modeling. Lines and points stored in a vector of pixels (a canvas), then output in .pbm format for viewing. Developed throughout a computer graphics class in multiple phases using C and C++.
+    2D/3D graphics system capable of plotting and wireframe modeling. Lines and points are stored in a vector of pixels (a canvas), then output in .pbm format for viewing. Developed throughout a computer graphics class in multiple phases using C and C++.
     <br />
     <br />
   </p>
@@ -45,14 +45,13 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This project was developed for CS324 - Computer Graphics at the University of Idaho Spring 2022.
+This project was developed for CS324 - Computer Graphics at the University of Idaho in Spring 2022.
 
-The graphics system consists of a canvas, on which all drawing takes place. The 2D system implements a viewport and a window, with changeable size and location. Calls to the 2D system involve **`moveTo2D`** and **`drawTo2D`**, which determine where each and every line will be drawn from and to. These functions perform a series of mappings on the x,y points given, to determine where on the pixmap the actual line will be drawn. 
+The graphics system consists of a canvas, on which all drawing takes place. The 2D system implements a viewport and a window, with changeable size and location. Calls to the 2D system involve **`moveTo2D`** and **`drawTo2D`**, which determine where each line will be drawn from and to. These functions perform a series of mappings on the x, and y points given, to determine where on the pixmap the actual line will be drawn. 
 
-The 3D system expands upon this by implementing a camera, a series of transforms, and **`moveTo3D`**/**`drawTo3D`** functions. The **`moveTo3D`** and **`drawTo3D`** functions apply the active transform (which is the result of premultiplying matricies consisting of the camera, and other transforms) to the x,y,z point. This then becomes a 2D x,y point, and the 2D functions are used to map and draw onto the pixmap. 
+The 3D system expands upon this by implementing a camera, a series of transforms, and **`moveTo3D`**/**`drawTo3D`** functions. The **`moveTo3D`** and **`drawTo3D`** functions apply the active transform (which is the result of pre-multiplying matrices consisting of the camera, and other transforms) to the x,y, and z points. This then becomes a 2D x,y point, and the 2D functions are used to map and draw onto the pixmap. 
 
-The lines drawn on the pixmap are saved as part of a **`.pbm`** file.
-
+The lines drawn on the pixmap are saved as part of a **`.pbm`** file
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
