@@ -54,14 +54,11 @@ The 3D system expands upon this by implementing a camera, a series of transforms
 The lines drawn on the pixmap are saved as part of a **`.pbm`** file
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
 ### Built With
 
 C++, C
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
 
 <!-- CONTACT -->
 ## Contact
